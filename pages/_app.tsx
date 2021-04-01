@@ -1,7 +1,8 @@
-import '../styles/globals.css'
+import '../styles/globals.css';
 
+// @ts-ignore
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+	return <Component {...pageProps} />;
 }
 
-export default MyApp
+export default MyApp;
