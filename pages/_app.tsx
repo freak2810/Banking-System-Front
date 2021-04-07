@@ -1,5 +1,5 @@
-import '../styles/globals.scss';
-import { ChakraProvider, theme } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react';
+import theme from '../config/chakraconfig';
 
 // @ts-ignore
 function MyApp({ Component, pageProps }) {

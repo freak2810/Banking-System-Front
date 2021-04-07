@@ -1,43 +1,67 @@
 import { Button } from '@chakra-ui/button';
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
-import { Box, Center, Heading, Stack } from '@chakra-ui/layout';
-import { useState } from 'react';
+import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/layout';
+import { Container } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-export default function Login() {
+export default function Login(this: any) {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
-	const [loginVariant, setLoginVariant] = useState<boolean>(true);
 
 	return (
-		<Center h='100vh'>
-			<Box align='center' boxShadow='base' padding='5' borderRadius='10px'>
-				<Heading mb={5}>Login</Heading>
-				<Stack>
-					<Input placeholder='Enter Customer ID' />
+		<Flex
+			height='100vh'
+			bg='gray.900'
+			justifyContent='center'
+			alignItems='center'
+		>
+			<Flex
+				alignItems='center'
+				bg='gray.900'
+				direction='column'
+				justifyContent='space-evenly'
+				boxShadow='dark-lg'
+				padding='5'
+				borderRadius='10px'
+			>
+				<Heading color='whiteAlpha.800' mb={5}>
+					Login
+				</Heading>
+				<Box>
+					<Input
+						marginY={2}
+						borderColor='whiteAlpha.800'
+						color='whiteAlpha.800'
+						placeholder='Enter Customer ID'
+					/>
 
-					<InputGroup>
+					<InputGroup marginY={2}>
 						<Input
+							color='whiteAlpha.800'
+							borderColor='whiteAlpha.800'
 							placeholder='Enter Password'
 							type={showPassword ? 'text' : 'password'}
 						/>
 
-						<InputRightElement width='4.5rem'>
-							<Button onClick={() => setShowPassword(prevState => !prevState)}>
+						<InputRightElement width='fit-content'>
+							<Button
+								bg='whiteAlpha.800'
+								onClick={() => setShowPassword(prevState => !prevState)}
+							>
 								{showPassword ? 'Hide' : 'Show'}
 							</Button>
 						</InputRightElement>
 					</InputGroup>
-				</Stack>
+				</Box>
 				<Button
 					marginTop='5'
 					isFullWidth
-					_hover={{ background: '#2b6cb0', color: '#fff' }}
 					colorScheme='blue'
-					variant='outline'
+					variant='solid'
 					size='md'
 				>
 					Log In
 				</Button>
-			</Box>
-		</Center>
+			</Flex>
+		</Flex>
 	);
 }
