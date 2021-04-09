@@ -21,7 +21,7 @@ export function useLogin() {
 }
 
 export default function LoginContextProvider({ children }: Props) {
-	const [isLoggedin, setIsLoggedin] = useState(true);
+	const [isLoggedin, setIsLoggedin] = useState(false);
 
 	function setLoggedIn() {
 		setIsLoggedin(() => true);

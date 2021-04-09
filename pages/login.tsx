@@ -65,7 +65,6 @@ export default function Login() {
 						</InputRightElement>
 					</InputGroup>
 				</Box>
-
 				<Button
 					marginTop='5'
 					isFullWidth
