@@ -3,10 +3,11 @@ import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/layout';
 import { Container } from '@chakra-ui/react';
 import React, { useState, useContext } from 'react';
-import { LoginContex } from './loginContex';
+import { loginContext } from './loginContext';
 
-export default function Login(this: any) {
-	const { showPassword, setShowPassword, isLoggedIn } = useContext(LoginContex);
+export default function Login() {
+	const { isLoggedIn } = useContext(loginContext);
+	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	return (
 		<Flex
@@ -46,7 +47,7 @@ export default function Login(this: any) {
 						<InputRightElement width='fit-content'>
 							<Button
 								bg='whiteAlpha.800'
-								onClick={() => setShowPassword((prevState: any) => !prevState)}
+								onClick={() => setShowPassword(prevState => !prevState)}
 							>
 								{showPassword ? 'Hide' : 'Show'}
 							</Button>

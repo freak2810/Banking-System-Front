@@ -1,17 +1,15 @@
 import Login from './login';
 import React, { useState } from 'react';
 import Transaction from './transaction';
-import { LoginContex } from './loginContex';
+import { loginContext } from './loginContext';
 export default function Home() {
-	const [user, isLoggedIn] = useState(false);
-	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [user, isLoggedIn] = useState<boolean>(false);
+
 	return (
 		<div>
-			<LoginContex.Provider
-				value={{ showPassword, setShowPassword, isLoggedIn }}
-			>
+			<loginContext.Provider value={{ isLoggedIn }}>
 				{user ? <Transaction /> : <Login />}
-			</LoginContex.Provider>
+			</loginContext.Provider>
 		</div>
 	);
 }
