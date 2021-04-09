@@ -62,12 +62,16 @@ export default function Login() {
 						</InputRightElement>
 					</InputGroup>
 				</Box>
+
 				<Button
 					marginTop='5'
 					isFullWidth
 					colorScheme='blue'
 					variant='solid'
 					size='md'
+					onClick={() => {
+						console.log('logged in');
+					}}
 				>
 					Log In
 				</Button>
