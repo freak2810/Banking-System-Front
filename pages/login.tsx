@@ -1,16 +1,26 @@
-import { Button } from '@chakra-ui/button';
-import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
-import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/layout';
-import { Container } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import {
+	Button,
+	Container,
+	Box,
+	Center,
+	Flex,
+	Heading,
+	Stack,
+	Input,
+	InputGroup,
+	InputRightElement,
+	IconButton,
+} from '@chakra-ui/react';
+import { useState } from 'react';
 
-export default function Login(this: any) {
+export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	return (
 		<Flex
 			height='100vh'
-			bg='gray.900'
+			bg='twitter.50'
 			justifyContent='center'
 			alignItems='center'
 		>
@@ -23,32 +33,32 @@ export default function Login(this: any) {
 				padding='5'
 				borderRadius='10px'
 			>
-				<Heading color='whiteAlpha.800' mb={5}>
+				<Heading color='twitter.50' mb={5}>
 					Login
 				</Heading>
 				<Box>
 					<Input
 						marginY={2}
-						borderColor='whiteAlpha.800'
-						color='whiteAlpha.800'
+						borderColor='twitter.50'
+						color='twitter.50'
 						placeholder='Enter Customer ID'
 					/>
 
 					<InputGroup marginY={2}>
 						<Input
-							color='whiteAlpha.800'
-							borderColor='whiteAlpha.800'
+							color='twitter.50'
+							borderColor='twitter.50'
 							placeholder='Enter Password'
 							type={showPassword ? 'text' : 'password'}
 						/>
 
 						<InputRightElement width='fit-content'>
-							<Button
-								bg='whiteAlpha.800'
+							<IconButton
+								aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
+								colorScheme='twitter.50'
 								onClick={() => setShowPassword(prevState => !prevState)}
-							>
-								{showPassword ? 'Hide' : 'Show'}
-							</Button>
+								icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+							/>
 						</InputRightElement>
 					</InputGroup>
 				</Box>
