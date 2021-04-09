@@ -13,9 +13,12 @@ import {
 	IconButton,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useLogin } from '../context/LoginContext';
 
 export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
+
+	const { isLoggedIn, logIn, logOut } = useLogin();
 
 	return (
 		<Flex
@@ -69,9 +72,7 @@ export default function Login() {
 					colorScheme='blue'
 					variant='solid'
 					size='md'
-					onClick={() => {
-						console.log('logged in');
-					}}
+					onClick={logIn}
 				>
 					Log In
 				</Button>

@@ -232,13 +232,6 @@
   dependencies:
     "@chakra-ui/utils" "1.5.1"
 
-"@chakra-ui/icon@1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/icon/-/icon-1.1.5.tgz#f37abe47fd176a4c291d2037df2d6ed480622c09"
-  integrity sha512-VCzR1L3CJlAxp0IilqCdsF9O/Nncp9Sb2ndQvnQcfbo0GEgQmsH2CBQnmlwnClBQGYhwi6srP9GErYg8ah9LQw==
-  dependencies:
-    "@chakra-ui/utils" "1.5.1"
-
 "@chakra-ui/icons@^1.0.9":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.9.tgz#3551805b156c4a69b324fce22504ca5288da72e4"
@@ -247,10 +240,10 @@
     "@chakra-ui/icon" "1.1.5"
     "@types/react" "^17.0.0"
 
-"@chakra-ui/image@1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/image/-/image-1.0.10.tgz#ace03938d28690bdf805d89aac06535f2b5fb30b"
-  integrity sha512-TroHb5XB3IrSSYwm+ZYGlokj7FEAUa1VTpcOxyDa8VxZgYdx5Fwl6cN8+auX+q1m2bEOFKN7RuyoUkzICr6fDg==
+"@chakra-ui/image@1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/image/-/image-1.0.11.tgz#de1ee15e81253ca0d71fc99a06a61d3bf749e8d5"
+  integrity sha512-ZaVw96aaR77oYowj7Hjyt3zVTD/w7FI7+g/TLWizhmiMHX614BZ37oPCa9h7nGojm+DwrvMNvyzWKMji4t+i/A==
   dependencies:
     "@chakra-ui/hooks" "1.3.1"
     "@chakra-ui/utils" "1.5.1"
@@ -604,19 +597,10 @@
     css-box-model "1.2.1"
     lodash.mergewith "4.6.2"
 
-"@chakra-ui/utils@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/utils/-/utils-1.5.1.tgz#a01fd14f6d948a13c2644cfa844f410299135ffc"
-  integrity sha512-J8P9wA96Kaxu4oHh+8s1rEL2VABWK/io8sBck19eOXKfVXJ55KyVwGZTrsVID0No43b7WzJx6n/xsMKkn39Peg==
-  dependencies:
-    "@types/lodash.mergewith" "4.6.6"
-    css-box-model "1.2.1"
-    lodash.mergewith "4.6.2"
-
-"@chakra-ui/visually-hidden@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/visually-hidden/-/visually-hidden-1.0.7.tgz#991a2987aca8591b5d3b4f5c0198ce2735cc521f"
-  integrity sha512-h7a6WaN4yNjl3BtwJvkvRRjihlQSjI0iS2dnDu8l2DlJflPT8w+bHYVxZbFZBytGV2iaacJytf8jSigTYnRNpw==
+"@chakra-ui/visually-hidden@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/visually-hidden/-/visually-hidden-1.0.8.tgz#aa4ec1cdec99437f11527af24b3f44b7b0fe7b8f"
+  integrity sha512-WTbXK9aonPYcttgqb6v+cKAwKYJ4C0iPtr90cEQTosSk08YlC1yz1G1vfU269u5grY8y7QAUgmM/alCm0HdRoA==
   dependencies:
     "@chakra-ui/utils" "1.5.1"
 
