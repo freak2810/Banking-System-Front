@@ -1,16 +1,6 @@
 import { createContext, useContext, useState } from 'react';
+import { Customer } from '../types/Customer';
 import JSXChildren from '../types/JSXChildren';
-
-export interface Customer {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email?: string;
-	phone?: string;
-	age: string;
-	dob?: string;
-	token?: string;
-}
 
 interface CustomerContextData {
 	customer?: Customer;

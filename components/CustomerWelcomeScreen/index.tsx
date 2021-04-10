@@ -1,5 +1,6 @@
 import { Box, Container, Heading, Text } from '@chakra-ui/react';
-import { Customer, useCustomer } from '../../context/CustomerContext';
+import { useCustomer } from '../../context/CustomerContext';
+import { Customer } from '../../types/Customer';
 
 export default function CustomerWelcomeScreen() {
 	const { customer } = useCustomer();
