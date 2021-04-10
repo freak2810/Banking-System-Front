@@ -1,24 +1,75 @@
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useRouter } from 'next/router';
 import {
 	Button,
-	Container,
 	Box,
-	Center,
 	Flex,
 	Heading,
-	Stack,
 	Input,
 	InputGroup,
 	InputRightElement,
 	IconButton,
+	FormControl,
+	FormLabel,
+	useToast,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import axiosConfig from '../config/axiosConfig';
+import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
 
 export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [custId, setCustId] = useState<string>('');
+	const [password, setPassword] = useState<string>('');
+	const [loading, setLoading] = useState<boolean>(false);
 
-	const { isLoggedIn, logIn, logOut } = useLogin();
+	const { updateCustomer } = useCustomer();
+	const { isLoggedIn, logIn } = useLogin();
+	const router = useRouter();
+
+	const toast = useToast();
+	const toastIdRef = useRef<string | undefined | number>();
+
+	useEffect(() => {
+		if (isLoggedIn) router.push('/dashboard');
+	}, []);
+
+	if (isLoggedIn) return null;
+
+	function addToToast(title: string, description?: string): void {
+		toastIdRef.current = toast({
+			title,
+			description,
+			duration: 5000,
+			isClosable: true,
+			position: 'top',
+			status: 'error',
+		});
+	}
+
+	async function loginHandler() {
+		try {
+			if (custId.length < 1) throw new Error('Invalid Custsomer ID');
+			if (password.length < 1) throw new Error('Invalid Password');
+
+			setLoading(true);
+
+			const result = await axiosConfig.post('customers/login', {
+				customerId: 'e69612bf-3f61-44b5-908f-8558960c2d48',
+				password: 'shubhasya',
+			});
+
+			updateCustomer(result.data);
+			setLoading(true);
+			logIn();
+			router.push('/dashboard');
+		} catch (e) {
+			addToToast('Please enter valid ID and Password');
+			setCustId('');
+			setPassword('');
+		}
+	}
 
 	return (
 		<Flex
@@ -40,19 +91,23 @@ export default function Login() {
 					Login
 				</Heading>
 				<Box>
-					<Input
-						marginY={2}
-						borderColor='twitter.50'
-						color='twitter.50'
-						placeholder='Enter Customer ID'
-					/>
-
+					<FormControl id='custId'>
+						<FormLabel color='whiteAlpha.900'>Customer ID</FormLabel>
+						<Input
+							marginY={2}
+							borderColor='twitter.50'
+							color='twitter.50'
+							placeholder='Enter Customer ID'
+							onChange={e => setCustId(e.target.value)}
+						/>
+					</FormControl>
 					<InputGroup marginY={2}>
 						<Input
 							color='twitter.50'
 							borderColor='twitter.50'
 							placeholder='Enter Password'
 							type={showPassword ? 'text' : 'password'}
+							onChange={e => setPassword(e.target.value)}
 						/>
 
 						<InputRightElement width='fit-content'>
@@ -66,12 +121,14 @@ export default function Login() {
 					</InputGroup>
 				</Box>
 				<Button
+					isLoading={loading}
+					loadingText='Logging In'
 					marginTop='5'
 					isFullWidth
 					colorScheme='blue'
 					variant='solid'
 					size='md'
-					onClick={logIn}
+					onClick={loginHandler}
 				>
 					Log In
 				</Button>
