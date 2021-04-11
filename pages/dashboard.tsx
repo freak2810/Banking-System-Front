@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import CustomerWelcomeScreen from '../components/CustomerWelcomeScreen';
 import TransationSelector from '../components/TransactionSelector';
-import { Customer, useCustomer } from '../context/CustomerContext';
+import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
 
 export default function Dashboard() {
