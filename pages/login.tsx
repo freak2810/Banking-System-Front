@@ -68,6 +68,7 @@ export default function Login() {
 			addToToast('Please enter valid ID and Password');
 			setCustId('');
 			setPassword('');
+			setLoading(false);
 		}
 	}
 
