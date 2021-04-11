@@ -18,9 +18,9 @@ export default function CustomerWelcomeScreen() {
 		>
 			<Box>
 				<Heading color='twitter.50' mb={5}>
-					Hey! {firstName}🐣
+					Hey! firstName🐣
 				</Heading>
-				<Text color='twitter.50'>Customer ID: {id}</Text>
+				<Text color='twitter.50'>Customer ID: id</Text>
 			</Box>
 		</Container>
 	);
