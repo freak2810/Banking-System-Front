@@ -1,7 +1,8 @@
 import { Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import CustomerWelcomeScreen from '../components/CustomerWelcomeScreen';
+import CustomerWelcomeScreen from '../components/CustomerWelcome';
+import Loading from '../components/Loading';
 import TransationSelector from '../components/TransactionSelector';
 import { useLogin } from '../context/LoginContext';
 
@@ -13,7 +14,7 @@ export default function Dashboard() {
 		if (!isLoggedIn) router.push('/login');
 	}, [isLoggedIn]);
 
-	if (!isLoggedIn) return null;
+	if (!isLoggedIn) return <Loading />;
 
 	return (
 		<Flex
@@ -23,7 +24,7 @@ export default function Dashboard() {
 			justifyContent='center'
 			alignItems='center'
 		>
-			<CustomerWelcomeScreen />
+			{/* <CustomerWelcomeScreen /> */}
 			<TransationSelector />
 		</Flex>
 	);
