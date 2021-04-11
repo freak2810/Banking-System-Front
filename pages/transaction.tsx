@@ -12,6 +12,7 @@ import {
 	NumberInput,
 	NumberInputField,
 	NumberInputStepper,
+	Select,
 	Stack,
 } from '@chakra-ui/react';
 import React from 'react';
@@ -19,7 +20,7 @@ import React from 'react';
 export default function Transaction() {
 	return (
 		<Flex
-			bg='blackAlpha.100'
+			bg='blackAlpha.300'
 			alignItems='center'
 			justifyContent='center'
 			height='100vh'
@@ -31,8 +32,18 @@ export default function Transaction() {
 				padding='5'
 				borderRadius='10px'
 			>
-				<FormControl id='accountNumber' isRequired my='5'>
-					<FormLabel color='whiteAlpha.900'>Account Number</FormLabel>
+				<FormControl id='senderaccountNumber' isRequired my='5'>
+					<FormLabel color='whiteAlpha.900'>From Account Number</FormLabel>
+					<Input
+						color='whiteAlpha.900'
+						placeholder="Enter the reciever's Account Number"
+					/>
+					<FormHelperText color='whiteAlpha.900'>
+						There are 16 digits in the account number
+					</FormHelperText>
+				</FormControl>
+				<FormControl id='recieveraccountNumber' isRequired my='5'>
+					<FormLabel color='whiteAlpha.900'>To Account Number</FormLabel>
 					<Input
 						color='whiteAlpha.900'
 						placeholder="Enter the reciever's Account Number"
@@ -57,6 +68,7 @@ export default function Transaction() {
 						Enter the amount in INR
 					</FormHelperText>
 				</FormControl>
+
 				<ButtonGroup>
 					<Button colorScheme='blue'>Transfer</Button>
 					<Button colorScheme='red'>Reset</Button>
