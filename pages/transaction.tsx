@@ -16,6 +16,24 @@ import {
 	Stack,
 } from '@chakra-ui/react';
 import React from 'react';
+const customeracc = [
+	{
+		value: 'AC1',
+		label: '1234567890012563',
+	},
+	{
+		value: 'AC2',
+		label: '1478523690002541',
+	},
+	{
+		value: 'AC3',
+		label: '1597536482001256',
+	},
+	{
+		value: 'AC4',
+		label: '1479632580023456',
+	},
+];
 
 export default function Transaction() {
 	return (
@@ -34,10 +52,14 @@ export default function Transaction() {
 			>
 				<FormControl id='senderaccountNumber' isRequired my='5'>
 					<FormLabel color='whiteAlpha.900'>From Account Number</FormLabel>
-					<Input
-						color='whiteAlpha.900'
-						placeholder="Enter the reciever's Account Number"
-					/>
+					<Select color='whiteAlpha.900' placeholder='Select Account'>
+						{customeracc.map(option => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
+					</Select>
+
 					<FormHelperText color='whiteAlpha.900'>
 						There are 16 digits in the account number
 					</FormHelperText>
