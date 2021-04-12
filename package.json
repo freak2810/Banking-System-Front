@@ -16,6 +16,7 @@
 		"@emotion/react": "^11",
 		"@emotion/styled": "^11",
 		"axios": "^0.21.1",
+		"bigint-crypto-utils": "^3.0.11",
 		"framer-motion": "^4",
 		"next": "10.1.2",
 		"prettier": "^2.2.1",

@@ -56,12 +56,11 @@ export default function Login() {
 			setLoading(true);
 
 			const result = await axiosConfig.post('customers/login', {
-				customerId: 'e69612bf-3f61-44b5-908f-8558960c2d48',
+				customerId: '84c60997-1988-4c78-97e7-393e30105840',
 				password: 'shubhasya',
 			});
-
 			updateCustomer(result.data);
-			setLoading(true);
+			setLoading(false);
 			logIn();
 			router.push('/dashboard');
 		} catch (e) {

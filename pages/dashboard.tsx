@@ -1,6 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import AccountDetails from '../components/AccountDetails';
 import CustomerWelcomeScreen from '../components/CustomerWelcome';
 import Loading from '../components/Loading';
 import TransationSelector from '../components/TransactionSelector';
@@ -24,8 +25,9 @@ export default function Dashboard() {
 			justifyContent='center'
 			alignItems='center'
 		>
-			{/* <CustomerWelcomeScreen /> */}
+			<CustomerWelcomeScreen />
 			<TransationSelector />
+			<AccountDetails />
 		</Flex>
 	);
 }
