@@ -3,14 +3,12 @@ import { useEffect, useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
 import { useCustomer } from '../../context/CustomerContext';
 import { Account } from '../../types/Account';
-import { PrivateKey } from '../../types/Security';
 import { decryptValue, encryptValue } from '../../utils/security';
 
 export default function AccountInfo(props: Account) {
 	const { customer } = useCustomer();
 
 	const [balance, setBalance] = useState<bigint>();
-	const [privateKey, setPrivateKey] = useState({});
 
 	useEffect(() => {
 		axiosConfig
