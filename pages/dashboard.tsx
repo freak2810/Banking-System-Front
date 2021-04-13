@@ -20,10 +20,11 @@ export default function Dashboard() {
 	return (
 		<Flex
 			bg='twitter.50'
-			height='100vh'
+			minHeight='100vh'
 			direction='column'
 			justifyContent='center'
 			alignItems='center'
+			padding='5%'
 		>
 			<CustomerWelcomeScreen />
 			<TransationSelector />

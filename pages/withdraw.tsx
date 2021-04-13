@@ -1,58 +1,147 @@
 import {
 	Button,
 	ButtonGroup,
+	Container,
 	Flex,
 	FormControl,
 	FormHelperText,
 	FormLabel,
+	Heading,
 	Input,
 	NumberInput,
 	NumberInputField,
-	Stack,
+	Select,
 } from '@chakra-ui/react';
-import React from 'react';
-export default function Withdraw() {
+import React, { useEffect, useRef, useState } from 'react';
+import AlertDialogue from '../components/AlertDialogue';
+import { FocusableElement } from '@chakra-ui/utils';
+import { useLogin } from '../context/LoginContext';
+import { useRouter } from 'next/router';
+import Loading from 'react-loading';
+import { useAccounts } from '../context/AccountContext';
+import axiosConfig from '../config/axiosConfig';
+import { encryptValue } from '../utils/security';
+import { useCustomer } from '../context/CustomerContext';
+
+export default function Deposit() {
+	const [accountSelectedIndex, setAccountSelectedIndex] = useState<number>(-1);
+	const [amount, setAmount] = useState<number>(0);
+	const [loading, setLoading] = useState<boolean>(false);
+
+	const [isOpen, setIsOpen] = React.useState(false);
+	const cancelRef = useRef<FocusableElement>();
+
+	const { isLoggedIn } = useLogin();
+	const router = useRouter();
+	const { accounts } = useAccounts();
+	const { customer } = useCustomer();
+
+	useEffect(() => {
+		if (!isLoggedIn) router.push('/login');
+	}, [isLoggedIn]);
+
+	if (!isLoggedIn) return <Loading />;
+
+	function alertCloseHandler() {
+		setIsOpen(false);
+	}
+
+	async function alertContinueHandler() {
+		setLoading(true);
+		setIsOpen(false);
+		const value = await encryptValue(
+			amount * -1,
+			accounts[accountSelectedIndex].publicKey
+		);
+		axiosConfig
+			.post(
+				'transactions/withdraw',
+				{
+					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
+					amount: value.toString(),
+				},
+				{ headers: { Authorization: `Token ${customer?.token}` } }
+			)
+			.then(res => {
+				console.log(res);
+				setLoading(false);
+				router.push('/dashboard');
+			})
+			.catch(e => {
+				console.log(e);
+				setLoading(false);
+				router.push('/dashboard');
+			});
+	}
+
 	return (
 		<Flex
-			bg='blackAlpha.100'
+			bg='twitter.50'
 			alignItems='center'
 			justifyContent='center'
 			height='100vh'
 		>
-			<Stack
-				width='40%'
+			<Container
 				bg='gray.900'
 				boxShadow='dark-lg'
 				padding='5'
 				borderRadius='10px'
+				margin='5%'
 			>
+				<Heading color='twitter.50' textAlign='center'>
+					Withdraw
+				</Heading>
 				<FormControl id='accountNumber' isRequired my='5'>
-					<FormLabel color='whiteAlpha.900'>Account Number</FormLabel>
-					<Input
-						color='whiteAlpha.900'
-						placeholder='Enter the Account Number to Withdraw Amount'
-					/>
-					<FormHelperText color='whiteAlpha.900'>
-						There are 16 digits in the account number
-					</FormHelperText>
+					<FormLabel color='twitter.50'>Account Number</FormLabel>
+					<Select
+						placeholder='Select Account'
+						bg='twitter.50'
+						onChange={e => {
+							setAccountSelectedIndex(+e.target.value);
+						}}
+					>
+						{accounts.map((account, index) => (
+							<option key={index} value={index}>
+								{account.accountNumber}
+							</option>
+						))}
+					</Select>
 				</FormControl>
 				<FormControl id='amount' isRequired my='5'>
-					<FormLabel color='whiteAlpha.900'>Amount</FormLabel>
+					<FormLabel color='twitter.50'>Amount</FormLabel>
 					<NumberInput min={0} keepWithinRange={true}>
 						<NumberInputField
-							color='whiteAlpha.900'
-							placeholder='Enter the amount that you would like to Withdraw'
+							color='twitter.50'
+							placeholder='Enter the amount that you would like to deposit'
+							value={amount}
+							onChange={e => setAmount(+e.target.value)}
 						/>
 					</NumberInput>
-					<FormHelperText color='whiteAlpha.900'>
-						Enter the amount in INR
-					</FormHelperText>
+					<FormHelperText color='twitter.50'>Amount in INR</FormHelperText>
 				</FormControl>
-				<ButtonGroup>
-					<Button colorScheme='blue'>Withdraw</Button>
-					<Button colorScheme='red'>Reset</Button>
+				<ButtonGroup width='100%' justifyContent='center'>
+					<Button
+						isLoading={loading}
+						loadingText='Processing Transaction'
+						colorScheme='blue'
+						mx='2'
+						onClick={() => setIsOpen(true)}
+					>
+						Withdraw
+					</Button>
+					<Button colorScheme='red' mx='2'>
+						Reset
+					</Button>
 				</ButtonGroup>
-			</Stack>
+			</Container>
+			<AlertDialogue
+				heading='Are you sure about this?'
+				body={`You can't undo this action afterwards.`}
+				isOpen={isOpen}
+				onContinue={alertContinueHandler}
+				onClose={alertCloseHandler}
+				cancelRef={cancelRef}
+			/>
 		</Flex>
 	);
 }

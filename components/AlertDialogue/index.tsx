@@ -14,6 +14,7 @@ interface Alert {
 	onClose: () => void;
 	heading?: string;
 	body?: string;
+	onContinue: () => void;
 }
 
 export default function ALertDialogue(props: Alert) {
@@ -33,7 +34,7 @@ export default function ALertDialogue(props: Alert) {
 					<AlertDialogFooter>
 						<Button
 							ref={props.cancelRef}
-							onClick={props.onClose}
+							onClick={props.onContinue}
 							colorScheme='blue'
 						>
 							Continue

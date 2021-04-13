@@ -10,25 +10,68 @@ import {
 	Input,
 	NumberInput,
 	NumberInputField,
+	Select,
 } from '@chakra-ui/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AlertDialogue from '../components/AlertDialogue';
 import { FocusableElement } from '@chakra-ui/utils';
+import { useLogin } from '../context/LoginContext';
+import { useRouter } from 'next/router';
+import Loading from 'react-loading';
+import { useAccounts } from '../context/AccountContext';
+import axiosConfig from '../config/axiosConfig';
+import { encryptValue } from '../utils/security';
+import { useCustomer } from '../context/CustomerContext';
 
 export default function Deposit() {
-	const [accountNumber, setAccountNumber] = useState<string>('');
+	const [accountSelectedIndex, setAccountSelectedIndex] = useState<number>(-1);
 	const [amount, setAmount] = useState<number>(0);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const [isOpen, setIsOpen] = React.useState(false);
 	const cancelRef = useRef<FocusableElement>();
 
-	function resetButtonHandler() {
-		setAccountNumber('');
-		setAmount(0);
-	}
+	const { isLoggedIn } = useLogin();
+	const router = useRouter();
+	const { accounts } = useAccounts();
+	const { customer } = useCustomer();
+
+	useEffect(() => {
+		if (!isLoggedIn) router.push('/login');
+	}, [isLoggedIn]);
+
+	if (!isLoggedIn) return <Loading />;
 
 	function alertCloseHandler() {
 		setIsOpen(false);
+	}
+
+	async function alertContinueHandler() {
+		setLoading(true);
+		setIsOpen(false);
+		const value = await encryptValue(
+			amount,
+			accounts[accountSelectedIndex].publicKey
+		);
+		axiosConfig
+			.post(
+				'transactions/deposit',
+				{
+					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
+					amount: value.toString(),
+				},
+				{ headers: { Authorization: `Token ${customer?.token}` } }
+			)
+			.then(res => {
+				console.log(res);
+				setLoading(false);
+				router.push('/dashboard');
+			})
+			.catch(e => {
+				console.log(e);
+				setLoading(false);
+				router.push('/dashboard');
+			});
 	}
 
 	return (
@@ -38,13 +81,6 @@ export default function Deposit() {
 			justifyContent='center'
 			height='100vh'
 		>
-			<AlertDialogue
-				heading='Are you sure about this?'
-				body={`You can't undo this action afterwards.`}
-				isOpen={isOpen}
-				onClose={alertCloseHandler}
-				cancelRef={cancelRef}
-			/>
 			<Container
 				bg='gray.900'
 				boxShadow='dark-lg'
@@ -57,15 +93,19 @@ export default function Deposit() {
 				</Heading>
 				<FormControl id='accountNumber' isRequired my='5'>
 					<FormLabel color='twitter.50'>Account Number</FormLabel>
-					<Input
-						color='twitter.50'
-						placeholder='Enter the Account Number to Deposit Amount'
-						value={accountNumber}
-						onChange={e => setAccountNumber(e.target.value)}
-					/>
-					<FormHelperText color='twitter.50'>
-						There are 16 digits in the account number
-					</FormHelperText>
+					<Select
+						placeholder='Select Account'
+						bg='twitter.50'
+						onChange={e => {
+							setAccountSelectedIndex(+e.target.value);
+						}}
+					>
+						{accounts.map((account, index) => (
+							<option key={index} value={index}>
+								{account.accountNumber}
+							</option>
+						))}
+					</Select>
 				</FormControl>
 				<FormControl id='amount' isRequired my='5'>
 					<FormLabel color='twitter.50'>Amount</FormLabel>
@@ -80,14 +120,28 @@ export default function Deposit() {
 					<FormHelperText color='twitter.50'>Amount in INR</FormHelperText>
 				</FormControl>
 				<ButtonGroup width='100%' justifyContent='center'>
-					<Button colorScheme='blue' mx='2' onClick={() => setIsOpen(true)}>
+					<Button
+						isLoading={loading}
+						loadingText='Processing Transaction'
+						colorScheme='blue'
+						mx='2'
+						onClick={() => setIsOpen(true)}
+					>
 						Deposit
 					</Button>
-					<Button colorScheme='red' mx='2' onClick={resetButtonHandler}>
+					<Button colorScheme='red' mx='2'>
 						Reset
 					</Button>
 				</ButtonGroup>
 			</Container>
+			<AlertDialogue
+				heading='Are you sure about this?'
+				body={`You can't undo this action afterwards.`}
+				isOpen={isOpen}
+				onContinue={alertContinueHandler}
+				onClose={alertCloseHandler}
+				cancelRef={cancelRef}
+			/>
 		</Flex>
 	);
 }

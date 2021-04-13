@@ -19,6 +19,7 @@ export default function AccountDetails() {
 			})
 			.then(res => {
 				updateAllAccounts(res.data);
+				console.log(res.data);
 				setLoading(false);
 			})
 			.catch(e => console.error(e));

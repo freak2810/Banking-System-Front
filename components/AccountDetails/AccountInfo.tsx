@@ -35,7 +35,7 @@ export default function AccountInfo(props: Account) {
 				Created On : {new Date(props.accountCreated).toUTCString()}
 			</Text>
 			{balance ? (
-				<Text color='twitter.50'>Balance : {balance.toString()}</Text>
+				<Text color='twitter.50'>Balance : ₹ {balance.toString()} /-</Text>
 			) : null}
 		</Container>
 	);

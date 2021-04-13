@@ -56,7 +56,7 @@ export default function Login() {
 			setLoading(true);
 
 			const result = await axiosConfig.post('customers/login', {
-				customerId: '84c60997-1988-4c78-97e7-393e30105840',
+				customerId: '71a0fcc0-f43a-4d30-bb25-2f608c8a9b07',
 				password: 'shubhasya',
 			});
 			updateCustomer(result.data);
