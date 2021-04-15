@@ -51,6 +51,20 @@ export default function Login() {
 			status: 'error',
 		});
 	}
+	function ValidatePhone(e: any) {
+		setCustId(e.target.value);
+		const regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+		if (e.target.value.match(regex)) return setIsError(false);
+		else {
+			return setIsError(true);
+		}
+	}
+	function ValidatePassword(e: any) {
+		setPassword(e.target.value);
+		const passreg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+		if (e.target.value.match(passreg)) return setIsPasswordError(false);
+		else return setIsPasswordError(true);
+	}
 
 	async function loginHandler() {
 		try {
@@ -60,7 +74,7 @@ export default function Login() {
 			setLoading(true);
 
 			const result = await axiosConfig.post('customers/login', {
-				customerId: '71a0fcc0-f43a-4d30-bb25-2f608c8a9b07',
+				customerId: '67b5100f-46da-482f-a563-b8ae60717d98',
 				password: 'shubhasya',
 			});
 			updateCustomer(result.data);
@@ -96,25 +110,17 @@ export default function Login() {
 				</Heading>
 				<Box>
 					<FormControl id='custId'>
-						<FormLabel color='whiteAlpha.900'>Customer ID</FormLabel>
+						<FormLabel color='whiteAlpha.900'>Mobile No</FormLabel>
 
 						<Input
 							marginY={2}
 							borderColor='twitter.50'
 							color='twitter.50'
-							placeholder='Enter Customer ID'
+							placeholder='Enter Mobile No'
 							type='tel'
 							isInvalid={isError}
 							value={custId}
-							onChange={e => {
-								setCustId(e.target.value);
-								if (e.target.value.length != 10) {
-									setIsError(true);
-									addToToast('Enter Valid Number');
-								} else {
-									setIsError(false);
-								}
-							}}
+							onChange={ValidatePhone}
 						/>
 					</FormControl>
 
@@ -126,12 +132,7 @@ export default function Login() {
 							type={showPassword ? 'text' : 'password'}
 							isInvalid={isPasswordError}
 							value={password}
-							onChange={e => {
-								setPassword(e.target.value);
-								if (e.target.value.length < 8) setIsPasswordError(true);
-								else if (e.target.value.length > 16) setIsPasswordError(true);
-								else setIsPasswordError(false);
-							}}
+							onChange={ValidatePassword}
 						/>
 
 						<InputRightElement width='fit-content'>
