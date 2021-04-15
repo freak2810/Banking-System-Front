@@ -12,8 +12,10 @@ import {
 	FormControl,
 	FormLabel,
 	useToast,
+	InputLeftAddon,
+	FormHelperText,
 } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
 import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
@@ -23,6 +25,8 @@ export default function Login() {
 	const [custId, setCustId] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [loading, setLoading] = useState<boolean>(false);
+	const [isError, setIsError] = useState<boolean>(false);
+	const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
 
 	const { updateCustomer } = useCustomer();
 	const { isLoggedIn, logIn } = useLogin();
@@ -93,21 +97,41 @@ export default function Login() {
 				<Box>
 					<FormControl id='custId'>
 						<FormLabel color='whiteAlpha.900'>Customer ID</FormLabel>
+
 						<Input
 							marginY={2}
 							borderColor='twitter.50'
 							color='twitter.50'
 							placeholder='Enter Customer ID'
-							onChange={e => setCustId(e.target.value)}
+							type='tel'
+							isInvalid={isError}
+							value={custId}
+							onChange={e => {
+								setCustId(e.target.value);
+								if (e.target.value.length != 10) {
+									setIsError(true);
+									addToToast('Enter Valid Number');
+								} else {
+									setIsError(false);
+								}
+							}}
 						/>
 					</FormControl>
+
 					<InputGroup marginY={2}>
 						<Input
 							color='twitter.50'
 							borderColor='twitter.50'
 							placeholder='Enter Password'
 							type={showPassword ? 'text' : 'password'}
-							onChange={e => setPassword(e.target.value)}
+							isInvalid={isPasswordError}
+							value={password}
+							onChange={e => {
+								setPassword(e.target.value);
+								if (e.target.value.length < 8) setIsPasswordError(true);
+								else if (e.target.value.length > 16) setIsPasswordError(true);
+								else setIsPasswordError(false);
+							}}
 						/>
 
 						<InputRightElement width='fit-content'>
