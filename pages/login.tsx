@@ -14,20 +14,26 @@ import {
 	useToast,
 	InputLeftAddon,
 	FormHelperText,
+	SliderProvider,
+	Text,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
 import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
-
+import validation from './validation';
+import { stringify } from 'node:querystring';
+import { Validate, Validate1 } from '../types/Validate';
 export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [custId, setCustId] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [loading, setLoading] = useState<boolean>(false);
-	const [isError, setIsError] = useState<boolean>(false);
-	const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
-
+	const [values, setValues] = useState<Validate>({
+		phonenumber: '',
+		password: '',
+	});
+	const [errors, setErrors] = useState<Validate1>({});
 	const { updateCustomer } = useCustomer();
 	const { isLoggedIn, logIn } = useLogin();
 	const router = useRouter();
@@ -51,33 +57,25 @@ export default function Login() {
 			status: 'error',
 		});
 	}
-	function ValidatePhone(e: any) {
-		setCustId(e.target.value);
-		const regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-		if (e.target.value.match(regex)) return setIsError(false);
-		else {
-			return setIsError(true);
-		}
-	}
-	function ValidatePassword(e: any) {
-		setPassword(e.target.value);
-		const passreg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-		if (e.target.value.match(passreg)) return setIsPasswordError(false);
-		else return setIsPasswordError(true);
+	function handlechange(e: any) {
+		setValues({ ...values, [e.target.name]: e.target.value });
 	}
 
 	async function loginHandler() {
 		try {
-			if (custId.length < 1) throw new Error('Invalid Custsomer ID');
-			if (password.length < 1) throw new Error('Invalid Password');
+			setErrors(validation(values));
+			if (values.phonenumber.length < 1)
+				throw new Error('Invalid Custsomer ID');
+			if (values.password.length < 1) throw new Error('Invalid Password');
 
 			setLoading(true);
-
+			//67b5100f-46da-482f-a563-b8ae60717d98
 			const result = await axiosConfig.post('customers/login', {
-				customerId: '67b5100f-46da-482f-a563-b8ae60717d98',
+				customerId: '',
 				password: 'shubhasya',
 			});
 			updateCustomer(result.data);
+
 			setLoading(false);
 			logIn();
 			router.push('/dashboard');
@@ -118,21 +116,30 @@ export default function Login() {
 							color='twitter.50'
 							placeholder='Enter Mobile No'
 							type='tel'
-							isInvalid={isError}
-							value={custId}
-							onChange={ValidatePhone}
+							name='phonenumber'
+							//isInvalid={isError}
+							value={values.phonenumber}
+							onChange={handlechange}
 						/>
+						{errors.phonenumber && (
+							<Text mb='10px' color='red'>
+								{errors.phonenumber}
+							</Text>
+						)}
 					</FormControl>
-
+					<Text mb='10px' color='whiteAlpha.900'>
+						Password
+					</Text>
 					<InputGroup marginY={2}>
 						<Input
 							color='twitter.50'
 							borderColor='twitter.50'
 							placeholder='Enter Password'
+							name='password'
 							type={showPassword ? 'text' : 'password'}
-							isInvalid={isPasswordError}
-							value={password}
-							onChange={ValidatePassword}
+							//isInvalid={isPasswordError}
+							value={values.password}
+							onChange={handlechange}
 						/>
 
 						<InputRightElement width='fit-content'>
@@ -144,6 +151,7 @@ export default function Login() {
 							/>
 						</InputRightElement>
 					</InputGroup>
+					{errors.password && <Text color='red'>{errors.password}</Text>}
 				</Box>
 				<Button
 					isLoading={loading}
