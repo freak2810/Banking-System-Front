@@ -39,7 +39,7 @@ export default function Transaction() {
 	const { customer } = useCustomer();
 	const [verifyButtonColor, setVerifyButtonColor] = useState<string>('blue');
 	const [verifyButtonTitle, setVerifyButtonTitle] = useState<string>('Verify');
-	const [loadingImage, setLoadingImage] = useState<boolean>(false);
+	const [loadingIcon, setLoadingIcon] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [amount, setAmount] = useState<number>(0);
 	const [isOpen, setIsOpen] = React.useState(false);
@@ -69,21 +69,21 @@ export default function Transaction() {
 	}
 
 	async function alertContinueHandler() {
-		setLoading(true);
-		setIsOpen(false);
+		try {
+			setLoading(true);
+			setIsOpen(false);
 
-		const senderValue = await encryptValue(
-			amount * -1,
-			accounts[accountSelectedIndex].publicKey
-		);
+			const senderValue = await encryptValue(
+				amount * -1,
+				accounts[accountSelectedIndex].publicKey
+			);
 
-		const receiverValue = await encryptValue(
-			amount,
-			(receiverAccount as Account).publicKey
-		);
+			const receiverValue = await encryptValue(
+				amount,
+				(receiverAccount as Account).publicKey
+			);
 
-		axiosConfig
-			.post(
+			await axiosConfig.post(
 				'transactions/transfer',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
@@ -92,21 +92,30 @@ export default function Transaction() {
 					receiverAmount: receiverValue.toString(),
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
-			)
-			.then(res => {
-				console.log(res);
-				setLoading(false);
-				router.push('/dashboard');
-			})
-			.catch(e => {
-				console.log(e);
-				setLoading(false);
-				router.push('/dashboard');
-			});
+			);
+		} catch (e) {
+			console.log(e);
+		} finally {
+			setLoading(false);
+			router.push('/dashboard');
+		}
 	}
 
-	function verifyButtonHandler() {
-		setLoadingImage(true);
+	async function verifyButtonHandler() {
+		try {
+			setLoadingIcon(true);
+			const res = await axiosConfig.get(`/accounts/${receiverAccountNumber}`, {
+				headers: { Authorization: `Token ${customer?.token}` },
+			});
+			setReceiverAccount(res.data);
+		} catch (e) {
+			setVerifyButtonColor('red');
+			setVerifyButtonTitle('Try Again');
+			setReceiverAccount(undefined);
+		} finally {
+			setLoadingIcon(false);
+		}
+
 		axiosConfig
 			.get(`/accounts/${receiverAccountNumber}`, {
 				headers: { Authorization: `Token ${customer?.token}` },
@@ -114,13 +123,13 @@ export default function Transaction() {
 			.then(res => {
 				setVerifyButtonColor('green');
 				setVerifyButtonTitle('Verified');
-				setLoadingImage(false);
+				setLoadingIcon(false);
 				setReceiverAccount(res.data);
 			})
 			.catch(e => {
 				setVerifyButtonColor('red');
 				setVerifyButtonTitle('Try Again');
-				setLoadingImage(false);
+				setLoadingIcon(false);
 				setReceiverAccount(undefined);
 			});
 	}
@@ -170,7 +179,7 @@ export default function Transaction() {
 						/>
 						<InputRightElement width='fit-content'>
 							<IconButton
-								isLoading={loadingImage}
+								isLoading={loadingIcon}
 								onClick={verifyButtonHandler}
 								colorScheme={verifyButtonColor}
 								aria-label={verifyButtonTitle}

@@ -27,7 +27,7 @@ export async function decryptValue(
 	cipher: string,
 	publicKey: PublicKey,
 	privateKey: PrivateKey
-) {
+): Promise<bigint> {
 	const cipherText = BigInt(cipher);
 
 	const newPublicKey = {
