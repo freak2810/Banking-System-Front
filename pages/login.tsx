@@ -22,18 +22,17 @@ import axiosConfig from '../config/axiosConfig';
 import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
 import validation from './validation';
-import { stringify } from 'node:querystring';
-import { Validate, Validate1 } from '../types/Validate';
+import { Validate, ValidateErrorProps } from '../types/Validate';
 export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [custId, setCustId] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [loading, setLoading] = useState<boolean>(false);
 	const [values, setValues] = useState<Validate>({
-		phonenumber: '',
+		phoneNumber: '',
 		password: '',
 	});
-	const [errors, setErrors] = useState<Validate1>({});
+	const [errors, setErrors] = useState<ValidateErrorProps>({});
 	const { updateCustomer } = useCustomer();
 	const { isLoggedIn, logIn } = useLogin();
 	const router = useRouter();
@@ -57,14 +56,11 @@ export default function Login() {
 			status: 'error',
 		});
 	}
-	function handlechange(e: any) {
-		setValues({ ...values, [e.target.name]: e.target.value });
-	}
 
 	async function loginHandler() {
 		try {
 			setErrors(validation(values));
-			if (values.phonenumber.length < 1)
+			if (values.phoneNumber.length < 1)
 				throw new Error('Invalid Custsomer ID');
 			if (values.password.length < 1) throw new Error('Invalid Password');
 
@@ -116,42 +112,45 @@ export default function Login() {
 							color='twitter.50'
 							placeholder='Enter Mobile No'
 							type='tel'
-							name='phonenumber'
-							//isInvalid={isError}
-							value={values.phonenumber}
-							onChange={handlechange}
+							name='phoneNumber'
+							value={values.phoneNumber}
+							onChange={e => {
+								setValues({ ...values, [e.target.name]: e.target.value });
+							}}
 						/>
-						{errors.phonenumber && (
+						{errors.phoneNumber && (
 							<Text mb='10px' color='red'>
-								{errors.phonenumber}
+								{errors.phoneNumber}
 							</Text>
 						)}
 					</FormControl>
-					<Text mb='10px' color='whiteAlpha.900'>
-						Password
-					</Text>
-					<InputGroup marginY={2}>
-						<Input
-							color='twitter.50'
-							borderColor='twitter.50'
-							placeholder='Enter Password'
-							name='password'
-							type={showPassword ? 'text' : 'password'}
-							//isInvalid={isPasswordError}
-							value={values.password}
-							onChange={handlechange}
-						/>
 
-						<InputRightElement width='fit-content'>
-							<IconButton
-								aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
-								colorScheme='twitter.50'
-								onClick={() => setShowPassword(prevState => !prevState)}
-								icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+					<FormControl>
+						<FormLabel color='whiteAlpha.900'>Password</FormLabel>
+						<InputGroup marginY={2}>
+							<Input
+								color='twitter.50'
+								borderColor='twitter.50'
+								placeholder='Enter Password'
+								name='password'
+								type={showPassword ? 'text' : 'password'}
+								value={values.password}
+								onChange={e => {
+									setValues({ ...values, [e.target.name]: e.target.value });
+								}}
 							/>
-						</InputRightElement>
-					</InputGroup>
-					{errors.password && <Text color='red'>{errors.password}</Text>}
+
+							<InputRightElement width='fit-content'>
+								<IconButton
+									aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
+									colorScheme='twitter.50'
+									onClick={() => setShowPassword(prevState => !prevState)}
+									icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+								/>
+							</InputRightElement>
+						</InputGroup>
+						{errors.password && <Text color='red'>{errors.password}</Text>}
+					</FormControl>
 				</Box>
 				<Button
 					isLoading={loading}

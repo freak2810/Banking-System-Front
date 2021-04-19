@@ -1,9 +1,9 @@
 export interface Validate {
-	phonenumber: string;
+	phoneNumber: string;
 	password: string;
 }
 
-export interface Validate1{
-    phonenumber?: string;
+export interface ValidateErrorProps{
+    phoneNumber?: string;
 	password?: string;
 }
