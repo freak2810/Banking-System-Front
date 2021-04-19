@@ -1,31 +1,27 @@
 import { Container, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
+import { PrivateKeyStore, useAccounts } from '../../context/AccountContext';
 import { useCustomer } from '../../context/CustomerContext';
 import { Account } from '../../types/Account';
+import { PrivateKey, PublicKey } from '../../types/Security';
 import { decryptValue, encryptValue } from '../../utils/security';
 
 export default function AccountInfo(props: Account) {
-	const { customer } = useCustomer();
+	const { getPrivateKey } = useAccounts();
 
 	const [balance, setBalance] = useState<bigint>(BigInt(0));
 
+	const decrypt = async (
+		balance: string,
+		publicKey: PublicKey,
+		privateKey: PrivateKey
+	) => {
+		return await decryptValue(balance, publicKey, privateKey);
+	};
+
 	useEffect(() => {
-		axiosConfig
-			.get(`private/${props.accountNumber}`, {
-				headers: { Authorization: `Token ${customer?.token}` },
-			})
-			.then(res => {
-				return decryptValue(
-					props.balance.toString(),
-					props.publicKey,
-					res.data
-				);
-			})
-			.then(balance => {
-				setBalance(balance);
-			})
-			.catch(err => console.log(err));
+		const key = getPrivateKey(props.accountNumber);
 	}, [props.accountNumber]);
 
 	return balance === BigInt(0) ? null : (
@@ -37,9 +33,7 @@ export default function AccountInfo(props: Account) {
 			<Text color='twitter.50' textTransform='capitalize'>
 				Created On : {new Date(props.accountCreated).toUTCString()}
 			</Text>
-			{balance ? (
-				<Text color='twitter.50'>Balance : ₹ {balance.toString()} /-</Text>
-			) : null}
+			<Text color='twitter.50'>Balance : ₹ {balance.toString()} /-</Text>
 		</Container>
 	);
 }

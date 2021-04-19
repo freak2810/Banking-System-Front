@@ -34,4 +34,3 @@ export default function Dashboard() {
 }
 
 // TODO: Need a link which redirects to edit details
-// TODO: Need 3 buttons for 3 transactions
