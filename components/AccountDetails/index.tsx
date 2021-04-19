@@ -4,8 +4,6 @@ import axiosConfig from '../../config/axiosConfig';
 import { PrivateKeyStore, useAccounts } from '../../context/AccountContext';
 import { useCustomer } from '../../context/CustomerContext';
 import ReactLoading from 'react-loading';
-import { Accounts } from '../../types/Account';
-import { PrivateKey } from '../../types/Security';
 import AccountInfo from './AccountInfo';
 
 export default function AccountDetails() {

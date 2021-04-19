@@ -35,6 +35,13 @@ export default function TransationSelector() {
 				>
 					Withdraw
 				</Button>
+				<Button
+					m='2'
+					colorScheme='cyan'
+					onClick={() => router.push('/statement')}
+				>
+					Statement
+				</Button>
 			</Flex>
 		</Container>
 	);
