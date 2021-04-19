@@ -15,34 +15,41 @@ export default function AccountDetails() {
 	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
 	useEffect(() => {
-		axiosConfig
-			.get(`accounts/customer/${customer?.id}`, {
-				headers: { Authorization: `Token ${customer?.token}` },
-			})
-			.then(res => {
-				updateAllAccounts(res.data);
+		async function fetch() {
+			try {
+				const response = await axiosConfig.get(
+					`accounts/customer/${customer?.id}`,
+					{
+						headers: { Authorization: `Token ${customer?.token}` },
+					}
+				);
+
+				updateAllAccounts(response.data);
 				setLoading(false);
-				return res.data as Accounts;
-			})
-			.then(accounts => {
-				const axiosRequests = accounts.map(account => {
+
+				const accountDetails = response.data;
+
+				const axiosRequests = accountDetails.map(account => {
 					return axiosConfig.get(`private/${account.accountNumber}`, {
 						headers: { Authorization: `Token ${customer?.token}` },
 					});
 				});
 
-				return Promise.all(axiosRequests);
-			})
-			.then(Results => {
-				const privateKeys: PrivateKeyStore[] = Results.map(res => {
+				const keys = await Promise.all(axiosRequests);
+
+				const privateKeyStore: PrivateKeyStore[] = keys.map((eachKey: any) => {
 					return {
-						accountNumber: res.config.url?.split('/')[1] as string,
-						privateKey: res.data as PrivateKey,
+						accountNumber: eachKey.config.url.split('/')[1],
+						privateKey: eachKey.data,
 					};
 				});
-				updateAllPrivateKeys(privateKeys);
-			})
-			.catch(e => console.error(e));
+
+				updateAllPrivateKeys(privateKeyStore);
+			} catch (e) {
+				console.log(e);
+			}
+		}
+		fetch();
 	}, []);
 
 	if (loading)

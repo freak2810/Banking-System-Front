@@ -11,6 +11,7 @@ import {
 	NumberInput,
 	NumberInputField,
 	Select,
+	useToast,
 } from '@chakra-ui/react';
 import React, { useDebugValue, useEffect, useRef, useState } from 'react';
 import AlertDialogue from '../components/AlertDialogue';
@@ -31,10 +32,13 @@ export default function Deposit() {
 	const [isOpen, setIsOpen] = React.useState(false);
 	const cancelRef = useRef<FocusableElement>();
 
-	const { isLoggedIn } = useLogin();
 	const router = useRouter();
+	const { isLoggedIn } = useLogin();
 	const { accounts } = useAccounts();
 	const { customer } = useCustomer();
+
+	const toast = useToast();
+	const toastIdRef = useRef<string | undefined | number>();
 
 	useEffect(() => {
 		if (!isLoggedIn) router.push('/login');
@@ -44,6 +48,17 @@ export default function Deposit() {
 
 	function alertCloseHandler() {
 		setIsOpen(false);
+	}
+
+	function addToToast(title: string, description?: string): void {
+		toastIdRef.current = toast({
+			title,
+			description,
+			duration: 5000,
+			isClosable: true,
+			position: 'top',
+			status: 'error',
+		});
 	}
 
 	async function alertContinueHandler() {
