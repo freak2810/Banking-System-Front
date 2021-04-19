@@ -17,7 +17,7 @@ export async function encryptValue(
 
 	const r = randBetween(n * n, BigInt(1));
 
-	const c1 = modPow(g, value, nSquared);
+	const c1 = modPow(g, BigInt(value), nSquared);
 	const c2 = modPow(r, n, nSquared);
 
 	return (c1 * c2) % nSquared;
