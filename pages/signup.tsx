@@ -29,51 +29,81 @@ export default function Signup() {
 				</Heading>
 				<FormControl id='FirstName' isRequired>
 					<FormLabel color='whiteAlpha.900'>First Name</FormLabel>
-					<Input color='whiteAlpha.900' placeholder='First Name' />
+					<Input
+						borderColor='twitter.50'
+						color='twitter.50'
+						placeholder='First Name'
+					/>
 				</FormControl>
 				<FormControl id='LastName' isRequired>
 					<FormLabel color='whiteAlpha.900'>Last Name</FormLabel>
-					<Input color='whiteAlpha.900' placeholder='Last Name' />
+					<Input
+						borderColor='twitter.50'
+						color='twitter.50'
+						placeholder='Last Name'
+					/>
 				</FormControl>
 				<FormControl id='Gender' isRequired>
-					<FormLabel color='whiteAlpha.900'>Gender</FormLabel>
-					<Select color='whiteAlpha.900' placeholder='Select Gender'>
+					<FormLabel borderColor='twitter.50' color='twitter.50'>
+						Gender
+					</FormLabel>
+					<Select
+						borderColor='twitter.50'
+						bg='twitter.50'
+						placeholder='Select Gender'
+					>
 						<option>Male</option>
 						<option>Female</option>
 						<option>Others</option>
 					</Select>
 				</FormControl>
 				<FormControl id='Age' isRequired>
-					<FormLabel color='whiteAlpha.900'>Age</FormLabel>
+					<FormLabel borderColor='twitter.50' color='twitter.50'>
+						Age
+					</FormLabel>
 					<NumberInput max={50} min={10}>
-						<NumberInputField color='whiteAlpha.900' placeholder='Enter Age' />
+						<NumberInputField
+							borderColor='twitter.50'
+							color='twitter.50'
+							placeholder='Enter Age'
+						/>
 					</NumberInput>
 				</FormControl>
 				<FormControl id='Addhaar' isRequired>
-					<FormLabel color='whiteAlpha.900'>Addhaar Number</FormLabel>
+					<FormLabel borderColor='twitter.50' color='twitter.50'>
+						Addhaar Number
+					</FormLabel>
 					<NumberInput max={50} min={10}>
 						<NumberInputField
-							color='whiteAlpha.900'
+							borderColor='twitter.50'
+							color='twitter.50'
 							placeholder='Enter Addhaar Number'
 						/>
 					</NumberInput>
 				</FormControl>
 				<FormControl id='email' isRequired>
-					<FormLabel color='whiteAlpha.900'>Email address</FormLabel>
+					<FormLabel borderColor='twitter.50' color='twitter.50'>
+						Email address
+					</FormLabel>
 					<Input
 						type='email'
-						color='whiteAlpha.900'
+						borderColor='twitter.50'
+						color='twitter.50'
 						placeholder='Enter E-mail'
 					/>
 				</FormControl>
 
 				<FormControl id='PhoneNumber' isRequired>
-					<FormLabel color='whiteAlpha.900'>Phone Number</FormLabel>
+					<FormLabel borderColor='twitter.50' color='twitter.50'>
+						Phone Number
+					</FormLabel>
 
 					<Input type='tel' placeholder='Phone number' />
 				</FormControl>
 				<FormControl id='Address' isRequired>
-					<FormLabel color='whiteAlpha.900'>Address</FormLabel>
+					<FormLabel borderColor='twitter.50' color='twitter.50'>
+						Address
+					</FormLabel>
 					<Textarea placeholder='Enter Your Address' />
 				</FormControl>
 

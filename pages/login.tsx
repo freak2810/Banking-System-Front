@@ -12,18 +12,27 @@ import {
 	FormControl,
 	FormLabel,
 	useToast,
+	InputLeftAddon,
+	FormHelperText,
+	SliderProvider,
+	Text,
 } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
 import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
-
+import validation from './validation';
+import { Validate, ValidateErrorProps } from '../types/Validate';
 export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [custId, setCustId] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [loading, setLoading] = useState<boolean>(false);
-
+	const [values, setValues] = useState<Validate>({
+		phoneNumber: '',
+		password: '',
+	});
+	const [errors, setErrors] = useState<ValidateErrorProps>({});
 	const { updateCustomer } = useCustomer();
 	const { isLoggedIn, logIn } = useLogin();
 	const router = useRouter();
@@ -50,16 +59,19 @@ export default function Login() {
 
 	async function loginHandler() {
 		try {
-			if (custId.length < 1) throw new Error('Invalid Custsomer ID');
-			if (password.length < 1) throw new Error('Invalid Password');
+			setErrors(validation(values));
+			if (values.phoneNumber.length < 1)
+				throw new Error('Invalid Custsomer ID');
+			if (values.password.length < 1) throw new Error('Invalid Password');
 
 			setLoading(true);
-
+			//67b5100f-46da-482f-a563-b8ae60717d98
 			const result = await axiosConfig.post('customers/login', {
 				customerId: '48588881-3a44-4114-92c6-97749871267e',
 				password: 'shubhasya',
 			});
 			updateCustomer(result.data);
+
 			setLoading(false);
 			logIn();
 			router.push('/dashboard');
@@ -92,33 +104,53 @@ export default function Login() {
 				</Heading>
 				<Box>
 					<FormControl id='custId'>
-						<FormLabel color='whiteAlpha.900'>Customer ID</FormLabel>
+						<FormLabel color='whiteAlpha.900'>Mobile No</FormLabel>
+
 						<Input
 							marginY={2}
 							borderColor='twitter.50'
 							color='twitter.50'
-							placeholder='Enter Customer ID'
-							onChange={e => setCustId(e.target.value)}
+							placeholder='Enter Mobile No'
+							type='tel'
+							name='phoneNumber'
+							value={values.phoneNumber}
+							onChange={e => {
+								setValues({ ...values, [e.target.name]: e.target.value });
+							}}
 						/>
+						{errors.phoneNumber && (
+							<Text mb='10px' color='red'>
+								{errors.phoneNumber}
+							</Text>
+						)}
 					</FormControl>
-					<InputGroup marginY={2}>
-						<Input
-							color='twitter.50'
-							borderColor='twitter.50'
-							placeholder='Enter Password'
-							type={showPassword ? 'text' : 'password'}
-							onChange={e => setPassword(e.target.value)}
-						/>
 
-						<InputRightElement width='fit-content'>
-							<IconButton
-								aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
-								colorScheme='twitter.50'
-								onClick={() => setShowPassword(prevState => !prevState)}
-								icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+					<FormControl>
+						<FormLabel color='whiteAlpha.900'>Password</FormLabel>
+						<InputGroup marginY={2}>
+							<Input
+								color='twitter.50'
+								borderColor='twitter.50'
+								placeholder='Enter Password'
+								name='password'
+								type={showPassword ? 'text' : 'password'}
+								value={values.password}
+								onChange={e => {
+									setValues({ ...values, [e.target.name]: e.target.value });
+								}}
 							/>
-						</InputRightElement>
-					</InputGroup>
+
+							<InputRightElement width='fit-content'>
+								<IconButton
+									aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
+									colorScheme='twitter.50'
+									onClick={() => setShowPassword(prevState => !prevState)}
+									icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+								/>
+							</InputRightElement>
+						</InputGroup>
+						{errors.password && <Text color='red'>{errors.password}</Text>}
+					</FormControl>
 				</Box>
 				<Button
 					isLoading={loading}
