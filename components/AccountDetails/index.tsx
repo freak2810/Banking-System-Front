@@ -1,17 +1,18 @@
 import { Container, Heading, Select } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
 import { PrivateKeyStore, useAccounts } from '../../context/AccountContext';
 import { useCustomer } from '../../context/CustomerContext';
 import ReactLoading from 'react-loading';
 import { Accounts } from '../../types/Account';
 import { PrivateKey } from '../../types/Security';
+import AccountInfo from './AccountInfo';
 
 export default function AccountDetails() {
 	const { customer } = useCustomer();
 	const { accounts, updateAllAccounts, updateAllPrivateKeys } = useAccounts();
 	const [loading, setLoading] = useState<boolean>(true);
-	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+	const [selectedIndex, setSelectedIndex] = useState<number>();
 
 	useEffect(() => {
 		axiosConfig
@@ -74,7 +75,9 @@ export default function AccountDetails() {
 					</option>
 				))}
 			</Select>
-			{/* {selectedIndex > -1 ? <AccountInfo {...accounts[selectedIndex]} /> : null} */}
+			{typeof selectedIndex === typeof 'number' ? (
+				<AccountInfo {...accounts[selectedIndex as number]} />
+			) : null}
 		</Container>
 	);
 }

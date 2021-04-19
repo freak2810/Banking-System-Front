@@ -10,7 +10,7 @@ import { decryptValue, encryptValue } from '../../utils/security';
 export default function AccountInfo(props: Account) {
 	const { getPrivateKey } = useAccounts();
 
-	const [balance, setBalance] = useState<bigint>(BigInt(0));
+	const [balance, setBalance] = useState<bigint>();
 
 	const decrypt = async (
 		balance: string,
@@ -22,9 +22,15 @@ export default function AccountInfo(props: Account) {
 
 	useEffect(() => {
 		const key = getPrivateKey(props.accountNumber);
+
+		console.log(key);
+
+		decryptValue(props.balance, props.publicKey, key?.privateKey as PrivateKey)
+			.then(balance => setBalance(balance))
+			.catch(e => console.log(e));
 	}, [props.accountNumber]);
 
-	return balance === BigInt(0) ? null : (
+	return typeof balance === typeof 'undefined' ? null : (
 		<Container my='5'>
 			<Text color='twitter.50'>Account Number : {props.accountNumber}</Text>
 			<Text color='twitter.50' textTransform='capitalize'>
@@ -33,7 +39,7 @@ export default function AccountInfo(props: Account) {
 			<Text color='twitter.50' textTransform='capitalize'>
 				Created On : {new Date(props.accountCreated).toUTCString()}
 			</Text>
-			<Text color='twitter.50'>Balance : ₹ {balance.toString()} /-</Text>
+			<Text color='twitter.50'>Balance : ₹ {balance?.toString()} /-</Text>
 		</Container>
 	);
 }

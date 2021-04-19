@@ -4,9 +4,9 @@ import { PrivateKey, PublicKey } from '../types/Security';
 const L = (x: bigint, n: bigint) => BigInt((x - BigInt(1)) / BigInt(n));
 
 export async function encryptValue(
-	value: number | bigint,
+	value: number,
 	publicKey: PublicKey
-) {
+): Promise<bigint> {
 	const newPublicKey = {
 		n: BigInt(publicKey.n),
 		g: BigInt(publicKey.g),
@@ -15,7 +15,7 @@ export async function encryptValue(
 	const { n, g } = newPublicKey;
 	const nSquared = n * n;
 
-	const r: bigint = randBetween(n * n, BigInt(1));
+	const r = randBetween(n * n, BigInt(1));
 
 	const c1 = modPow(g, value, nSquared);
 	const c2 = modPow(r, n, nSquared);
