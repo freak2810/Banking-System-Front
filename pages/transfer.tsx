@@ -73,12 +73,12 @@ export default function Transaction() {
 			setLoading(true);
 			setIsOpen(false);
 
-			const senderValue = await encryptValue(
+			const senderValue: bigint = await encryptValue(
 				amount * -1,
 				accounts[accountSelectedIndex].publicKey
 			);
 
-			const receiverValue = await encryptValue(
+			const receiverValue: bigint = await encryptValue(
 				amount,
 				(receiverAccount as Account).publicKey
 			);
@@ -115,23 +115,6 @@ export default function Transaction() {
 		} finally {
 			setLoadingIcon(false);
 		}
-
-		axiosConfig
-			.get(`/accounts/${receiverAccountNumber}`, {
-				headers: { Authorization: `Token ${customer?.token}` },
-			})
-			.then(res => {
-				setVerifyButtonColor('green');
-				setVerifyButtonTitle('Verified');
-				setLoadingIcon(false);
-				setReceiverAccount(res.data);
-			})
-			.catch(e => {
-				setVerifyButtonColor('red');
-				setVerifyButtonTitle('Try Again');
-				setLoadingIcon(false);
-				setReceiverAccount(undefined);
-			});
 	}
 
 	return (
