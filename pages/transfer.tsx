@@ -87,9 +87,9 @@ export default function Transaction() {
 				'transactions/transfer',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
-					senderAmount: senderValue.toString(),
+					senderAmount: `${senderValue}`,
 					receiverAccount: receiverAccount?.accountNumber,
-					receiverAmount: receiverValue.toString(),
+					receiverAmount: `${receiverValue}`,
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);

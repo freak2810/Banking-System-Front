@@ -60,7 +60,7 @@ export default function Deposit() {
 				'transactions/deposit',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
-					amount: value.toString(),
+					amount: `${value}`,
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
