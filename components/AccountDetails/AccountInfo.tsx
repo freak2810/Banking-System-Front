@@ -1,36 +1,24 @@
 import { Container, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import axiosConfig from '../../config/axiosConfig';
-import { PrivateKeyStore, useAccounts } from '../../context/AccountContext';
-import { useCustomer } from '../../context/CustomerContext';
+import { useAccounts } from '../../context/AccountContext';
 import { Account } from '../../types/Account';
-import { PrivateKey, PublicKey } from '../../types/Security';
-import { decryptValue, encryptValue } from '../../utils/security';
+import { PrivateKey } from '../../types/Security';
+import { decryptValue } from '../../utils/security';
 
 export default function AccountInfo(props: Account) {
 	const { getPrivateKey } = useAccounts();
 
-	const [balance, setBalance] = useState<bigint>();
-
-	const decrypt = async (
-		balance: string,
-		publicKey: PublicKey,
-		privateKey: PrivateKey
-	) => {
-		return await decryptValue(balance, publicKey, privateKey);
-	};
+	const [balance, setBalance] = useState<string>();
 
 	useEffect(() => {
 		const key = getPrivateKey(props.accountNumber);
-
-		console.log(key);
 
 		decryptValue(props.balance, props.publicKey, key?.privateKey as PrivateKey)
 			.then(balance => setBalance(balance))
 			.catch(e => console.log(e));
 	}, [props.accountNumber]);
 
-	return typeof balance === typeof 'undefined' ? null : (
+	return !balance ? null : (
 		<Container my='5'>
 			<Text color='twitter.50'>Account Number : {props.accountNumber}</Text>
 			<Text color='twitter.50' textTransform='capitalize'>

@@ -13,8 +13,6 @@ import {
 	Input,
 	InputGroup,
 	InputRightElement,
-	NumberDecrementStepper,
-	NumberIncrementStepper,
 	NumberInput,
 	NumberInputField,
 	NumberInputStepper,
@@ -73,12 +71,12 @@ export default function Transaction() {
 			setLoading(true);
 			setIsOpen(false);
 
-			const senderValue: bigint = await encryptValue(
+			const senderValue = await encryptValue(
 				amount * -1,
 				accounts[accountSelectedIndex].publicKey
 			);
 
-			const receiverValue: bigint = await encryptValue(
+			const receiverValue = await encryptValue(
 				amount,
 				(receiverAccount as Account).publicKey
 			);
@@ -87,9 +85,9 @@ export default function Transaction() {
 				'transactions/transfer',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
-					senderAmount: `${senderValue}`,
+					senderAmount: senderValue,
 					receiverAccount: receiverAccount?.accountNumber,
-					receiverAmount: `${receiverValue}`,
+					receiverAmount: receiverValue,
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
@@ -108,6 +106,7 @@ export default function Transaction() {
 				headers: { Authorization: `Token ${customer?.token}` },
 			});
 			setReceiverAccount(res.data);
+			setVerifyButtonColor('green');
 		} catch (e) {
 			setVerifyButtonColor('red');
 			setVerifyButtonTitle('Try Again');

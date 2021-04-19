@@ -51,7 +51,7 @@ export default function Deposit() {
 			setLoading(true);
 			setIsOpen(false);
 
-			const value: bigint = await encryptValue(
+			const value = await encryptValue(
 				amount * -1,
 				accounts[accountSelectedIndex].publicKey
 			);
@@ -60,7 +60,7 @@ export default function Deposit() {
 				'transactions/withdraw',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
-					amount: `${value}`,
+					amount: value,
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);

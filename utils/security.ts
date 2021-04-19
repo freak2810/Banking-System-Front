@@ -1,49 +1,54 @@
-import { modPow, randBetween } from 'bigint-crypto-utils';
+import bigInt, { randBetween } from 'big-integer';
 import { PrivateKey, PublicKey } from '../types/Security';
 
-const L = (x: bigint, n: bigint) => BigInt((x - BigInt(1)) / BigInt(n));
+const L = (x: bigInt.BigInteger, n: bigInt.BigInteger) =>
+	x.minus(bigInt.one).divide(n);
 
 export async function encryptValue(
 	value: number,
 	publicKey: PublicKey
-): Promise<bigint> {
-	const newPublicKey: { n: bigint; g: bigint } = {
-		n: BigInt(publicKey.n),
-		g: BigInt(publicKey.g),
+): Promise<string> {
+	const newPublicKey = {
+		n: bigInt(publicKey.n),
+		g: bigInt(publicKey.g),
 	};
 
-	const { n, g }: { n: bigint; g: bigint } = newPublicKey;
-	const nSquared: bigint = (n * n) as bigint;
+	const { n, g } = newPublicKey;
+	const nSquared = n.square();
 
-	const r: bigint = randBetween(n * n, BigInt(1)) as bigint;
+	const r = randBetween(bigInt.one, nSquared);
 
-	const c1: bigint = modPow(g, BigInt(value), nSquared) as bigint;
-	const c2: bigint = modPow(r, n, nSquared) as bigint;
+	const c1 = g.modPow(bigInt(value), nSquared);
+	const c2 = r.modPow(n, nSquared);
 
-	return ((c1 * c2) % nSquared) as bigint;
+	return c1.multiply(c2).mod(nSquared).toString();
 }
 
 export async function decryptValue(
 	cipher: string,
 	publicKey: PublicKey,
 	privateKey: PrivateKey
-): Promise<bigint> {
-	const cipherText = BigInt(cipher) as bigint;
+): Promise<string> {
+	const cipherText = bigInt(cipher);
 
-	const newPublicKey: { n: bigint; g: bigint } = {
-		n: BigInt(publicKey.n),
-		g: BigInt(publicKey.g),
+	const newPublicKey = {
+		n: bigInt(publicKey.n),
+		g: bigInt(publicKey.g),
 	};
 
-	const newPrivateKey: { lambda: bigint; mu: bigint } = {
-		lambda: BigInt(privateKey.lambda) as bigint,
-		mu: BigInt(privateKey.mu) as bigint,
+	const newPrivateKey = {
+		lambda: bigInt(privateKey.lambda),
+		mu: bigInt(privateKey.mu),
 	};
 
-	const { n }: { n: bigint; g: bigint } = newPublicKey;
-	const { lambda, mu }: { lambda: bigint; mu: bigint } = newPrivateKey;
+	const { n } = newPublicKey;
+	const { lambda, mu } = newPrivateKey;
 
-	const alpha: bigint = modPow(cipherText, lambda, n * n) as bigint;
+	const nSquared = n.square();
 
-	return ((L(alpha, n) * mu) % n) as bigint;
+	// const alpha: bigint = modPow(cipherText, lambda, n * n) as bigint;
+
+	const alpha = cipherText.modPow(lambda, nSquared);
+
+	return L(alpha, n).multiply(mu).mod(n).toString();
 }

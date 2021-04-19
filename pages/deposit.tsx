@@ -12,7 +12,7 @@ import {
 	NumberInputField,
 	Select,
 } from '@chakra-ui/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useDebugValue, useEffect, useRef, useState } from 'react';
 import AlertDialogue from '../components/AlertDialogue';
 import { FocusableElement } from '@chakra-ui/utils';
 import { useLogin } from '../context/LoginContext';
@@ -51,7 +51,7 @@ export default function Deposit() {
 			setLoading(true);
 			setIsOpen(false);
 
-			const value: bigint = await encryptValue(
+			const value = await encryptValue(
 				amount,
 				accounts[accountSelectedIndex].publicKey
 			);
@@ -60,7 +60,7 @@ export default function Deposit() {
 				'transactions/deposit',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
-					amount: `${value}`,
+					amount: value,
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
