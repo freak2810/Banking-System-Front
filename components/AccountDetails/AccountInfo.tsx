@@ -19,13 +19,12 @@ export default function AccountInfo(props: Account) {
 				return decryptValue(props.balance, props.publicKey, res.data);
 			})
 			.then(balance => {
-				console.log(balance);
 				setBalance(balance);
 			})
 			.catch(err => console.log(err));
 	}, [props.accountNumber]);
 
-	return !balance ? null : (
+	return typeof balance === 'undefined' ? null : (
 		<Container my='5'>
 			<Text color='twitter.50'>Account Number : {props.accountNumber}</Text>
 			<Text color='twitter.50' textTransform='capitalize'>

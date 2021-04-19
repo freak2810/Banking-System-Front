@@ -30,10 +30,10 @@ export default function AccountDetails() {
 			<ReactLoading type='balls' color='twitter.50' height='7vh' width='7vw' />
 		);
 
-	function renderAccountInfo(index?: number) {
-		if (index) return <AccountInfo {...accounts[index]} />;
-		else return null;
-	}
+	// function renderAccountInfo(index?: number) {
+	// 	if (index) return <AccountInfo {...accounts[index]} />;
+	// 	else return null;
+	// }
 
 	return (
 		<Container
