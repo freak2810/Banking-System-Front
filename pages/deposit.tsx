@@ -51,7 +51,7 @@ export default function Deposit() {
 			setLoading(true);
 			setIsOpen(false);
 
-			const value = await encryptValue(
+			const value: bigint = await encryptValue(
 				amount,
 				accounts[accountSelectedIndex].publicKey
 			);
