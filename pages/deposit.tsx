@@ -47,31 +47,29 @@ export default function Deposit() {
 	}
 
 	async function alertContinueHandler() {
-		setLoading(true);
-		setIsOpen(false);
-		const value = await encryptValue(
-			amount,
-			accounts[accountSelectedIndex].publicKey
-		);
-		axiosConfig
-			.post(
+		try {
+			setLoading(true);
+			setIsOpen(false);
+
+			const value = await encryptValue(
+				amount,
+				accounts[accountSelectedIndex].publicKey
+			);
+
+			await axiosConfig.post(
 				'transactions/deposit',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
 					amount: value.toString(),
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
-			)
-			.then(res => {
-				console.log(res);
-				setLoading(false);
-				router.push('/dashboard');
-			})
-			.catch(e => {
-				console.log(e);
-				setLoading(false);
-				router.push('/dashboard');
-			});
+			);
+		} catch (e) {
+			console.log(e);
+		} finally {
+			setLoading(false);
+			router.push('/dashboard');
+		}
 	}
 
 	return (

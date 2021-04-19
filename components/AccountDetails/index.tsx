@@ -12,7 +12,7 @@ export default function AccountDetails() {
 	const { customer } = useCustomer();
 	const { accounts, updateAllAccounts, updateAllPrivateKeys } = useAccounts();
 	const [loading, setLoading] = useState<boolean>(true);
-	const [selectedIndex, setSelectedIndex] = useState<number>();
+	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
 	useEffect(() => {
 		axiosConfig
@@ -75,9 +75,7 @@ export default function AccountDetails() {
 					</option>
 				))}
 			</Select>
-			{typeof selectedIndex === typeof 'number' ? (
-				<AccountInfo {...accounts[selectedIndex as number]} />
-			) : null}
+			{selectedIndex > -1 ? <AccountInfo {...accounts[selectedIndex]} /> : null}
 		</Container>
 	);
 }
