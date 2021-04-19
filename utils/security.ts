@@ -46,8 +46,6 @@ export async function decryptValue(
 
 	const nSquared = n.square();
 
-	// const alpha: bigint = modPow(cipherText, lambda, n * n) as bigint;
-
 	const alpha = cipherText.modPow(lambda, nSquared);
 
 	return L(alpha, n).multiply(mu).mod(n).toString();
