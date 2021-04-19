@@ -12,29 +12,23 @@ import {
 	FormControl,
 	FormLabel,
 	useToast,
-	InputLeftAddon,
-	FormHelperText,
-	SliderProvider,
-	Text,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
 import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
-import validation from './validation';
-import { Validate, ValidateErrorProps } from '../types/Validate';
+import { loginValidation } from '../utils/validation';
+
 export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
-	const [custId, setCustId] = useState<string>('');
-	const [password, setPassword] = useState<string>('');
 	const [loading, setLoading] = useState<boolean>(false);
-	const [values, setValues] = useState<Validate>({
-		phoneNumber: '',
-		password: '',
-	});
-	const [errors, setErrors] = useState<ValidateErrorProps>({});
+
+	const [phoneNumber, setPhoneNumber] = useState<string>('');
+	const [password, setPassword] = useState<string>('');
+
 	const { updateCustomer } = useCustomer();
 	const { isLoggedIn, logIn } = useLogin();
+
 	const router = useRouter();
 
 	const toast = useToast();
@@ -59,25 +53,27 @@ export default function Login() {
 
 	async function loginHandler() {
 		try {
-			setErrors(validation(values));
-			if (values.phoneNumber.length < 1)
-				throw new Error('Invalid Custsomer ID');
-			if (values.password.length < 1) throw new Error('Invalid Password');
+			loginValidation(phoneNumber, password);
 
 			setLoading(true);
-			//67b5100f-46da-482f-a563-b8ae60717d98
-			const result = await axiosConfig.post('customers/login', {
-				customerId: '48588881-3a44-4114-92c6-97749871267e',
-				password: 'shubhasya',
-			});
-			updateCustomer(result.data);
 
-			setLoading(false);
-			logIn();
-			router.push('/dashboard');
+			try {
+				const result = await axiosConfig.post('customers/login', {
+					phoneNumber,
+					password,
+				});
+
+				updateCustomer(result.data);
+				setLoading(false);
+				logIn();
+				router.push('/dashboard');
+			} catch (e) {
+				addToToast('Invalid Credentials');
+			}
 		} catch (e) {
-			addToToast('Please enter valid ID and Password');
-			setCustId('');
+			addToToast(e.message);
+		} finally {
+			setPhoneNumber('');
 			setPassword('');
 			setLoading(false);
 		}
@@ -104,25 +100,18 @@ export default function Login() {
 				</Heading>
 				<Box>
 					<FormControl id='custId'>
-						<FormLabel color='whiteAlpha.900'>Mobile No</FormLabel>
+						<FormLabel color='whiteAlpha.900'>Mobile Number</FormLabel>
 
 						<Input
 							marginY={2}
 							borderColor='twitter.50'
 							color='twitter.50'
-							placeholder='Enter Mobile No'
-							type='tel'
+							placeholder='Mobile Number'
+							type='number'
 							name='phoneNumber'
-							value={values.phoneNumber}
-							onChange={e => {
-								setValues({ ...values, [e.target.name]: e.target.value });
-							}}
+							value={phoneNumber}
+							onChange={e => setPhoneNumber(e.target.value)}
 						/>
-						{errors.phoneNumber && (
-							<Text mb='10px' color='red'>
-								{errors.phoneNumber}
-							</Text>
-						)}
 					</FormControl>
 
 					<FormControl>
@@ -131,25 +120,21 @@ export default function Login() {
 							<Input
 								color='twitter.50'
 								borderColor='twitter.50'
-								placeholder='Enter Password'
+								placeholder='Password'
 								name='password'
 								type={showPassword ? 'text' : 'password'}
-								value={values.password}
-								onChange={e => {
-									setValues({ ...values, [e.target.name]: e.target.value });
-								}}
+								value={password}
+								onChange={e => setPassword(e.target.value)}
 							/>
-
 							<InputRightElement width='fit-content'>
 								<IconButton
 									aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
 									colorScheme='twitter.50'
 									onClick={() => setShowPassword(prevState => !prevState)}
-									icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+									icon={showPassword === true ? <ViewOffIcon /> : <ViewIcon />}
 								/>
 							</InputRightElement>
 						</InputGroup>
-						{errors.password && <Text color='red'>{errors.password}</Text>}
 					</FormControl>
 				</Box>
 				<Button
