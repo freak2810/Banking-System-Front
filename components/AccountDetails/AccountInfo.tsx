@@ -16,7 +16,11 @@ export default function AccountInfo(props: Account) {
 				headers: { Authorization: `Token ${customer?.token}` },
 			})
 			.then(res => {
-				return decryptValue(props.balance, props.publicKey, res.data);
+				return decryptValue(
+					props.balance.toString(),
+					props.publicKey,
+					res.data
+				);
 			})
 			.then(balance => {
 				setBalance(balance);
