@@ -3,7 +3,7 @@ import { PublicKey } from './Security';
 export interface Account {
 	accountNumber: string;
 	role: string;
-	balance: string;
+	balance: string | bigint;
 	publicKey: PublicKey;
 	accountCreated: string;
 }

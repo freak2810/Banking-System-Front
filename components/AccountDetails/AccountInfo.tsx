@@ -8,7 +8,7 @@ import { decryptValue, encryptValue } from '../../utils/security';
 export default function AccountInfo(props: Account) {
 	const { customer } = useCustomer();
 
-	const [balance, setBalance] = useState<bigint>();
+	const [balance, setBalance] = useState<bigint>(BigInt(0));
 
 	useEffect(() => {
 		axiosConfig
@@ -24,7 +24,7 @@ export default function AccountInfo(props: Account) {
 			.catch(err => console.log(err));
 	}, [props.accountNumber]);
 
-	return typeof balance === 'undefined' ? null : (
+	return balance === BigInt(0) ? null : (
 		<Container my='5'>
 			<Text color='twitter.50'>Account Number : {props.accountNumber}</Text>
 			<Text color='twitter.50' textTransform='capitalize'>
