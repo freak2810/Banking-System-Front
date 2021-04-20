@@ -13,8 +13,11 @@ import {
 	Textarea,
 } from '@chakra-ui/react';
 import React from 'react';
+import SignUp from '../components/Signup';
 
 export default function Signup() {
+	return <SignUp />;
+
 	return (
 		<Flex bg='twitter.50' alignItems='center' justifyContent='center'>
 			<Stack

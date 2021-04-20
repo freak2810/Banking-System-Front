@@ -22,3 +22,5 @@ export default function StatementGenerator(props: Account) {
 
 	return <div></div>;
 }
+
+//TODO: When the decryption of balance is done ... also update the details in the account context
