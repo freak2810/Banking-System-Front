@@ -12,6 +12,7 @@ import {
 	FormControl,
 	FormLabel,
 	useToast,
+	InputLeftAddon,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
@@ -79,6 +80,11 @@ export default function Login() {
 		}
 	}
 
+	const renderShowPasswordIcon = (showPassword: boolean) => {
+		if (showPassword === true) return <ViewOffIcon />;
+		else return <ViewIcon />;
+	};
+
 	return (
 		<Flex
 			height='100vh'
@@ -101,17 +107,22 @@ export default function Login() {
 				<Box>
 					<FormControl id='custId'>
 						<FormLabel color='whiteAlpha.900'>Mobile Number</FormLabel>
-
-						<Input
-							marginY={2}
-							borderColor='twitter.50'
-							color='twitter.50'
-							placeholder='Mobile Number'
-							type='number'
-							name='phoneNumber'
-							value={phoneNumber}
-							onChange={e => setPhoneNumber(e.target.value)}
-						/>
+						<InputGroup my={2}>
+							<InputLeftAddon
+								bgColor='twitter.50'
+								color='gray.900'
+								children='+91'
+							/>
+							<Input
+								borderColor='twitter.50'
+								color='twitter.50'
+								placeholder='Mobile Number'
+								type='number'
+								name='phoneNumber'
+								value={phoneNumber}
+								onChange={e => setPhoneNumber(e.target.value)}
+							/>
+						</InputGroup>
 					</FormControl>
 
 					<FormControl>
@@ -131,7 +142,7 @@ export default function Login() {
 									aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
 									colorScheme='twitter.50'
 									onClick={() => setShowPassword(prevState => !prevState)}
-									icon={showPassword === true ? <ViewOffIcon /> : <ViewIcon />}
+									icon={renderShowPasswordIcon(showPassword)}
 								/>
 							</InputRightElement>
 						</InputGroup>

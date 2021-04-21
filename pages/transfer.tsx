@@ -30,6 +30,7 @@ import AlertDialogue from '../components/AlertDialogue';
 import { useLogin } from '../context/LoginContext';
 import Loading from '../components/Loading';
 import { Account } from '../types/Account';
+import axios from 'axios';
 
 export default function Transaction() {
 	const [accountSelectedIndex, setAccountSelectedIndex] = useState<number>(-1);
@@ -71,8 +72,13 @@ export default function Transaction() {
 			setLoading(true);
 			setIsOpen(false);
 
-			const senderValue = await encryptValue(
+			const negativeMultiplier = await encryptValue(
 				amount * -1,
+				accounts[accountSelectedIndex].publicKey
+			);
+
+			const senderValue = await encryptValue(
+				amount,
 				accounts[accountSelectedIndex].publicKey
 			);
 
@@ -81,16 +87,29 @@ export default function Transaction() {
 				(receiverAccount as Account).publicKey
 			);
 
-			await axiosConfig.post(
-				'transactions/transfer',
+			await axios.post(
+				'http://localhost:8000/api/transactions/transfer',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
 					senderAmount: senderValue,
 					receiverAccount: receiverAccount?.accountNumber,
 					receiverAmount: receiverValue,
+					negativeMultiplier,
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
+
+			// await axiosConfig.post(
+			// 	'transactions/transfer',
+			// 	{
+			// 		senderAccount: accounts[accountSelectedIndex as number].accountNumber,
+			// 		senderAmount: senderValue,
+			// 		receiverAccount: receiverAccount?.accountNumber,
+			// 		receiverAmount: receiverValue,
+			// 		negativeMultiplier,
+			// 	},
+			// 	{ headers: { Authorization: `Token ${customer?.token}` } }
+			// );
 		} catch (e) {
 			console.log(e);
 		} finally {

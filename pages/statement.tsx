@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
-import { useAccounts } from '../context/AccountContext';
 import { useLogin } from '../context/LoginContext';
 import { useRouter } from 'next/router';
 import Loading from 'react-loading';
@@ -18,10 +17,10 @@ export default function Statement() {
 
 	return (
 		<Flex
-			height='100vh'
 			bg='twitter.50'
 			justifyContent='center'
 			alignItems='center'
+			minHeight='100vh'
 		>
 			<StatementGeneration />
 		</Flex>

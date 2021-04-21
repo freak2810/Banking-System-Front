@@ -51,8 +51,13 @@ export default function Deposit() {
 			setLoading(true);
 			setIsOpen(false);
 
-			const value = await encryptValue(
+			const negativeMultiplier = await encryptValue(
 				amount * -1,
+				accounts[accountSelectedIndex].publicKey
+			);
+
+			const value = await encryptValue(
+				amount,
 				accounts[accountSelectedIndex].publicKey
 			);
 
@@ -61,6 +66,7 @@ export default function Deposit() {
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
 					amount: value,
+					negativeMultiplier,
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
