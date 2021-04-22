@@ -119,7 +119,8 @@ export default function Transaction() {
 
 			addToToast('Transaction Successful', '', 'success');
 		} catch (e) {
-			console.log(e.message);
+			console.log(e);
+			addToToast('Internal Server Error', 'Please try again later');
 		} finally {
 			setLoading(false);
 			router.push('/dashboard');

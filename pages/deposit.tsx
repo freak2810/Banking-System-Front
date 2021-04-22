@@ -22,6 +22,10 @@ import { useAccounts } from '../context/AccountContext';
 import axiosConfig from '../config/axiosConfig';
 import { encryptValue } from '../utils/security';
 import { useCustomer } from '../context/CustomerContext';
+import {
+	accountSelectedValidation,
+	amountValidation,
+} from '../utils/validation';
 
 export default function Deposit() {
 	const [accountSelectedIndex, setAccountSelectedIndex] = useState<number>(-1);
@@ -49,14 +53,18 @@ export default function Deposit() {
 		setIsOpen(false);
 	}
 
-	function addToToast(title: string, description?: string): void {
+	function addToToast(
+		title: string,
+		description?: string,
+		status?: string
+	): void {
 		toastIdRef.current = toast({
 			title,
 			description,
 			duration: 5000,
 			isClosable: true,
 			position: 'top',
-			status: 'error',
+			status: status === 'success' ? 'success' : 'error',
 		});
 	}
 
@@ -78,11 +86,24 @@ export default function Deposit() {
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
+
+			addToToast('Deposit Successful', '', 'success');
 		} catch (e) {
 			console.log(e);
+			addToToast('Internal Server Error', 'Please try again later');
 		} finally {
 			setLoading(false);
 			router.push('/dashboard');
+		}
+	}
+
+	function depositButtonHandler() {
+		try {
+			accountSelectedValidation(accountSelectedIndex);
+			amountValidation(amount);
+			setIsOpen(true);
+		} catch (e) {
+			addToToast(e.message);
 		}
 	}
 
@@ -137,12 +158,16 @@ export default function Deposit() {
 						loadingText='Processing Transaction'
 						colorScheme='blue'
 						mx='2'
-						onClick={() => setIsOpen(true)}
+						onClick={depositButtonHandler}
 					>
 						Deposit
 					</Button>
-					<Button colorScheme='red' mx='2'>
-						Reset
+					<Button
+						colorScheme='red'
+						mx='2'
+						onClick={() => router.push('dashboard')}
+					>
+						Go Back
 					</Button>
 				</ButtonGroup>
 			</Container>
