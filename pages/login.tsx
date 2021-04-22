@@ -41,14 +41,18 @@ export default function Login() {
 
 	if (isLoggedIn) return null;
 
-	function addToToast(title: string, description?: string): void {
+	function addToToast(
+		title: string,
+		description?: string,
+		status?: string
+	): void {
 		toastIdRef.current = toast({
 			title,
 			description,
 			duration: 5000,
 			isClosable: true,
 			position: 'top',
-			status: 'error',
+			status: status === 'success' ? 'success' : 'error',
 		});
 	}
 
@@ -68,6 +72,7 @@ export default function Login() {
 				setLoading(false);
 				logIn();
 				router.push('/dashboard');
+				addToToast('Login Successful', '', 'success');
 			} catch (e) {
 				addToToast('Invalid Credentials');
 			}

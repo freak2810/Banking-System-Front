@@ -9,12 +9,7 @@ import { decryptValue } from '../../utils/security';
 
 export default function AccountDetails() {
 	const { customer } = useCustomer();
-	const {
-		accounts,
-		updateAllAccounts,
-		updateAllPrivateKeys,
-		getPrivateKey,
-	} = useAccounts();
+	const { accounts, updateAllAccounts, updateAllPrivateKeys } = useAccounts();
 	const [loading, setLoading] = useState<boolean>(true);
 	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
@@ -27,8 +22,6 @@ export default function AccountDetails() {
 						headers: { Authorization: `Token ${customer?.token}` },
 					}
 				);
-
-				setLoading(false);
 
 				const accountDetails = response.data;
 
@@ -55,14 +48,17 @@ export default function AccountDetails() {
 						balance: await decryptValue(
 							account.balance,
 							account.publicKey,
-							getPrivateKey(account.accountNumber).privateKey
+							privateKeyStore.filter(
+								keys => keys.accountNumber === account.accountNumber
+							)[0].privateKey
 						),
 					};
 				});
 
 				decryptedResults = await Promise.all(decryptedResults);
-				console.log(decryptedResults);
+
 				updateAllAccounts(decryptedResults);
+				setLoading(false);
 			} catch (e) {
 				console.log(e);
 			}
