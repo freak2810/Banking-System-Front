@@ -168,7 +168,11 @@ export default function Deposit() {
 					>
 						Withdraw
 					</Button>
-					<Button colorScheme='red' mx='2'>
+					<Button
+						colorScheme='red'
+						mx='2'
+						onClick={() => router.push('/dashboard')}
+					>
 						Reset
 					</Button>
 				</ButtonGroup>
