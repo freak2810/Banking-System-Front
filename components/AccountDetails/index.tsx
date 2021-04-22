@@ -1,14 +1,20 @@
 import { Container, Heading, Select } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
 import { PrivateKeyStore, useAccounts } from '../../context/AccountContext';
 import { useCustomer } from '../../context/CustomerContext';
 import ReactLoading from 'react-loading';
 import AccountInfo from './AccountInfo';
+import { decryptValue } from '../../utils/security';
 
 export default function AccountDetails() {
 	const { customer } = useCustomer();
-	const { accounts, updateAllAccounts, updateAllPrivateKeys } = useAccounts();
+	const {
+		accounts,
+		updateAllAccounts,
+		updateAllPrivateKeys,
+		getPrivateKey,
+	} = useAccounts();
 	const [loading, setLoading] = useState<boolean>(true);
 	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
@@ -22,7 +28,6 @@ export default function AccountDetails() {
 					}
 				);
 
-				updateAllAccounts(response.data);
 				setLoading(false);
 
 				const accountDetails = response.data;
@@ -43,6 +48,21 @@ export default function AccountDetails() {
 				});
 
 				updateAllPrivateKeys(privateKeyStore);
+
+				let decryptedResults = await accountDetails.map(async account => {
+					return {
+						...account,
+						balance: await decryptValue(
+							account.balance,
+							account.publicKey,
+							getPrivateKey(account.accountNumber).privateKey
+						),
+					};
+				});
+
+				decryptedResults = await Promise.all(decryptedResults);
+				console.log(decryptedResults);
+				updateAllAccounts(decryptedResults);
 			} catch (e) {
 				console.log(e);
 			}
@@ -83,4 +103,9 @@ export default function AccountDetails() {
 			{selectedIndex > -1 ? <AccountInfo {...accounts[selectedIndex]} /> : null}
 		</Container>
 	);
+}
+function getPrivateKey(
+	accountNumber: any
+): import('../../types/Security').PrivateKey {
+	throw new Error('Function not implemented.');
 }

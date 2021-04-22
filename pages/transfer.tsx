@@ -18,6 +18,7 @@ import {
 	NumberInputStepper,
 	Select,
 	Stack,
+	useToast,
 } from '@chakra-ui/react';
 import React, { useState, useRef, useEffect } from 'react';
 import axiosConfig from '../config/axiosConfig';
@@ -30,7 +31,11 @@ import AlertDialogue from '../components/AlertDialogue';
 import { useLogin } from '../context/LoginContext';
 import Loading from '../components/Loading';
 import { Account } from '../types/Account';
-import axios from 'axios';
+import {
+	accountNumberValidation,
+	accountSelectedValidation,
+	amountValidation,
+} from '../utils/validation';
 
 export default function Transaction() {
 	const [accountSelectedIndex, setAccountSelectedIndex] = useState<number>(-1);
@@ -50,6 +55,20 @@ export default function Transaction() {
 		''
 	);
 	const [receiverAccount, setReceiverAccount] = useState<Account>();
+
+	const toast = useToast();
+	const toastIdRef = useRef<string | undefined | number>();
+
+	function addToToast(title: string, description?: string): void {
+		toastIdRef.current = toast({
+			title,
+			description,
+			duration: 5000,
+			isClosable: true,
+			position: 'top',
+			status: 'error',
+		});
+	}
 
 	useEffect(() => {
 		if (!isLoggedIn) router.push('/login');
@@ -87,8 +106,8 @@ export default function Transaction() {
 				(receiverAccount as Account).publicKey
 			);
 
-			await axios.post(
-				'http://localhost:8000/api/transactions/transfer',
+			await axiosConfig.post(
+				'transactions/transfer',
 				{
 					senderAccount: accounts[accountSelectedIndex as number].accountNumber,
 					senderAmount: senderValue,
@@ -98,20 +117,8 @@ export default function Transaction() {
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
-
-			// await axiosConfig.post(
-			// 	'transactions/transfer',
-			// 	{
-			// 		senderAccount: accounts[accountSelectedIndex as number].accountNumber,
-			// 		senderAmount: senderValue,
-			// 		receiverAccount: receiverAccount?.accountNumber,
-			// 		receiverAmount: receiverValue,
-			// 		negativeMultiplier,
-			// 	},
-			// 	{ headers: { Authorization: `Token ${customer?.token}` } }
-			// );
 		} catch (e) {
-			console.log(e);
+			console.log(e.message);
 		} finally {
 			setLoading(false);
 			router.push('/dashboard');
@@ -126,6 +133,7 @@ export default function Transaction() {
 			});
 			setReceiverAccount(res.data);
 			setVerifyButtonColor('green');
+			setVerifyButtonTitle('Verified');
 		} catch (e) {
 			setVerifyButtonColor('red');
 			setVerifyButtonTitle('Try Again');
@@ -133,6 +141,26 @@ export default function Transaction() {
 		} finally {
 			setLoadingIcon(false);
 		}
+	}
+
+	function transferButtonHandler() {
+		try {
+			accountSelectedValidation(accountSelectedIndex);
+			accountNumberValidation(
+				receiverAccountNumber,
+				receiverAccount ? true : false
+			);
+			amountValidation(amount, accounts[accountSelectedIndex].balance);
+			setIsOpen(true);
+		} catch (e) {
+			addToToast(e.message);
+		}
+	}
+
+	function accountNumberChangedHandler(accountNumber: string) {
+		setReceiverAccountNumber(accountNumber);
+		setVerifyButtonColor('blue');
+		setVerifyButtonTitle('Verify');
 	}
 
 	return (
@@ -170,24 +198,22 @@ export default function Transaction() {
 				</FormControl>
 				<FormControl id='recieveraccountNumber' isRequired my='5'>
 					<FormLabel color='whiteAlpha.900'>To Account Number</FormLabel>
-					<InputGroup>
+					<Flex>
 						<Input
-							width='90%'
 							color='whiteAlpha.900'
-							placeholder="Reciever's Account Number"
+							placeholder='Account Number'
 							value={receiverAccountNumber}
-							onChange={e => setReceiverAccountNumber(e.target.value)}
+							onChange={e => accountNumberChangedHandler(e.target.value)}
 						/>
-						<InputRightElement width='fit-content'>
-							<IconButton
-								isLoading={loadingIcon}
-								onClick={verifyButtonHandler}
-								colorScheme={verifyButtonColor}
-								aria-label={verifyButtonTitle}
-								icon={<RenderIcon />}
-							/>
-						</InputRightElement>
-					</InputGroup>
+						<IconButton
+							marginLeft='1'
+							isLoading={loadingIcon}
+							onClick={verifyButtonHandler}
+							colorScheme={verifyButtonColor}
+							aria-label={verifyButtonTitle}
+							icon={<RenderIcon />}
+						/>
+					</Flex>
 					<FormHelperText color='whiteAlpha.900'>
 						There are 16 digits in the account number
 					</FormHelperText>
@@ -197,7 +223,7 @@ export default function Transaction() {
 					<NumberInput min={0} keepWithinRange={true}>
 						<NumberInputField
 							color='twitter.50'
-							placeholder='Enter the amount that you would like to deposit'
+							placeholder='Amount to Transfer'
 							value={amount}
 							onChange={e => setAmount(+e.target.value)}
 						/>
@@ -211,12 +237,16 @@ export default function Transaction() {
 						loadingText='Processing Transaction'
 						colorScheme='blue'
 						mx='2'
-						onClick={() => setIsOpen(true)}
+						onClick={transferButtonHandler}
 					>
 						Transfer
 					</Button>
-					<Button colorScheme='red' mx='2'>
-						Reset
+					<Button
+						colorScheme='red'
+						mx='2'
+						onClick={() => router.push('/dashboard')}
+					>
+						Go Back
 					</Button>
 				</ButtonGroup>
 			</Container>

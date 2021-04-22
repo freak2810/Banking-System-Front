@@ -21,6 +21,7 @@ export default function Statement() {
 			justifyContent='center'
 			alignItems='center'
 			minHeight='100vh'
+			padding='5'
 		>
 			<StatementGeneration />
 		</Flex>

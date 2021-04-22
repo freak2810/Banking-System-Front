@@ -7,13 +7,12 @@ import {
 	FormHelperText,
 	FormLabel,
 	Heading,
-	Input,
 	NumberInput,
 	NumberInputField,
 	Select,
 	useToast,
 } from '@chakra-ui/react';
-import React, { useDebugValue, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AlertDialogue from '../components/AlertDialogue';
 import { FocusableElement } from '@chakra-ui/utils';
 import { useLogin } from '../context/LoginContext';

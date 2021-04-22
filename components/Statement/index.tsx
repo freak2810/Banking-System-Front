@@ -12,10 +12,9 @@ export default function StatementGeneration() {
 			<Container
 				bg='gray.900'
 				boxShadow='dark-lg'
-				padding='5'
-				width='100%'
 				borderRadius='10px'
-				my='5'
+				padding='5'
+				// my='5'
 			>
 				<Heading color='twitter.50' my='5' textAlign='center'>
 					Account Statement

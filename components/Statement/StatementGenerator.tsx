@@ -4,9 +4,11 @@ import {
 	TableCaption,
 	Tbody,
 	Td,
+	Tfoot,
 	Th,
 	Thead,
 	Tr,
+	useMediaQuery,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
@@ -25,6 +27,8 @@ interface Transaction {
 }
 
 export default function StatementGenerator(props: Account) {
+	const [isLargerThan1280] = useMediaQuery('(min-width: 1280px)');
+
 	const { customer } = useCustomer();
 	const { getPrivateKey } = useAccounts();
 
@@ -92,7 +96,6 @@ export default function StatementGenerator(props: Account) {
 
 	const renderDate = (dateString: string) => {
 		const date = new Date(dateString);
-
 		return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
 	};
 
@@ -133,11 +136,12 @@ export default function StatementGenerator(props: Account) {
 			bg='gray.900'
 			boxShadow='dark-lg'
 			padding='5'
-			width='100%'
+			width='100px'
 			borderRadius='10px'
 			my='5'
+			size='sm'
 		>
-			<TableCaption
+			{/* <TableCaption
 				bg='gray.900'
 				boxShadow='dark-lg'
 				padding='5'
@@ -146,8 +150,26 @@ export default function StatementGenerator(props: Account) {
 				color='twitter.50'
 			>
 				These are the last {transactions.length} transactions
-			</TableCaption>
+			</TableCaption> */}
 			<Thead>
+				<Tr>
+					<Th width='20%' color='twitter.50'>
+						Transaction ID
+					</Th>
+					<Th backgroundColor='red' width='10%' color='twitter.50'>
+						Transaction Type
+					</Th>
+					<Th width='10%' color='twitter.50'>
+						Date
+					</Th>
+					<Th width='10%' color='twitter.50'>
+						Amount
+					</Th>
+					{/* <Th color='twitter.50'>Tranferred To/ From</Th> */}
+				</Tr>
+			</Thead>
+			<Tbody>{RenderTransactions()}</Tbody>
+			<Tfoot borderRadius='10px'>
 				<Tr>
 					<Th color='twitter.50'>Transaction ID</Th>
 					<Th color='twitter.50'>Transaction Type</Th>
@@ -155,8 +177,7 @@ export default function StatementGenerator(props: Account) {
 					<Th color='twitter.50'>Amount</Th>
 					{/* <Th color='twitter.50'>Tranferred To/ From</Th> */}
 				</Tr>
-			</Thead>
-			<Tbody>{RenderTransactions()}</Tbody>
+			</Tfoot>
 		</Table>
 	) : (
 		<Center>
