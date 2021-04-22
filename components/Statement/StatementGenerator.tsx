@@ -231,16 +231,15 @@ export default function StatementGenerator(props: Account) {
 				borderRadius='10px'
 				my='5'
 			>
-				{/* <TableCaption
-				bg='gray.900'
-				boxShadow='dark-lg'
-				padding='5'
-				my='5'
-				borderRadius='10px'
-				color='twitter.50'
-			>
-				These are the last {transactions.length} transactions
-			</TableCaption> */}
+				<TableCaption
+					bg='gray.900'
+					boxShadow='dark-lg'
+					my='5'
+					borderRadius='10px'
+					color='twitter.50'
+				>
+					These are the last {transactions.length} transactions
+				</TableCaption>
 				<Thead>
 					<Tr>
 						<Th color='twitter.50'>Transaction ID</Th>
