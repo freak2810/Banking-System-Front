@@ -9,6 +9,7 @@ import {
 	Thead,
 	Tr,
 	useMediaQuery,
+	Text,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
@@ -17,6 +18,11 @@ import { useCustomer } from '../../context/CustomerContext';
 import { Account } from '../../types/Account';
 import { decryptValue } from '../../utils/security';
 import Loading from 'react-loading';
+import { UnorderedList } from '@chakra-ui/layout';
+import { ListItem } from '@chakra-ui/layout';
+import { List } from '@chakra-ui/layout';
+import { Container } from '@chakra-ui/layout';
+import { Box } from '@chakra-ui/react';
 
 interface Transaction {
 	transactionType: string;
@@ -27,7 +33,7 @@ interface Transaction {
 }
 
 export default function StatementGenerator(props: Account) {
-	const [isLargerThan1280] = useMediaQuery('(min-width: 1280px)');
+	const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
 
 	const { customer } = useCustomer();
 	const { getPrivateKey } = useAccounts();
@@ -131,17 +137,101 @@ export default function StatementGenerator(props: Account) {
 			</Tr>
 		));
 
+	const MobileView = () => {
+		return (
+			<List bg='twitter.50' my='5' borderRadius='10px'>
+				{transactions.map(transaction => (
+					<ListItem
+						backgroundColor={renderColor(transaction.transactionType)}
+						key={transaction.transactionId}
+						my='2'
+						borderRadius='10px'
+						borderColor='darkAlpha'
+						borderWidth='2'
+					>
+						<Box padding='2'>
+							<Text color='darkAlpha'>
+								<span
+									style={{
+										fontSize: '80%',
+										fontWeight: 'bold',
+										textTransform: 'uppercase',
+										marginRight: '5px',
+									}}
+								>
+									{' '}
+									Transaction ID:
+								</span>{' '}
+								{transaction.transactionId}
+							</Text>
+							<Text color='darkAlpha' textTransform='capitalize'>
+								<span
+									style={{
+										fontSize: '80%',
+										fontWeight: 'bold',
+										textTransform: 'uppercase',
+										marginRight: '5px',
+									}}
+								>
+									Transaction Type:{' '}
+								</span>
+								{renderTransactionType(
+									transaction.transactionType,
+									transaction.sent
+								)}
+							</Text>
+							<Text color='darkAlpha'>
+								<span
+									style={{
+										fontSize: '80%',
+										fontWeight: 'bold',
+										textTransform: 'uppercase',
+										marginRight: '5px',
+									}}
+								>
+									Date:{' '}
+								</span>{' '}
+								{renderDate(transaction.date)}
+							</Text>
+							<Text
+								color={renderAmountColor(
+									transaction.transactionType,
+									transaction.sent
+								)}
+							>
+								<span
+									style={{
+										color: 'black',
+										fontSize: '80%',
+										fontWeight: 'bold',
+										textTransform: 'uppercase',
+										marginRight: '5px',
+									}}
+								>
+									Amount:{' '}
+								</span>
+								{transaction.transactionType == 'transfer' && transaction.sent
+									? '- '
+									: ''}
+								{transaction.amount}/-
+							</Text>
+						</Box>
+					</ListItem>
+				))}
+			</List>
+		);
+	};
+
 	return transactions.length > 0 ? (
-		<Table
-			bg='gray.900'
-			boxShadow='dark-lg'
-			padding='5'
-			width='100px'
-			borderRadius='10px'
-			my='5'
-			size='sm'
-		>
-			{/* <TableCaption
+		isLargerThan768 ? (
+			<Table
+				bg='gray.900'
+				boxShadow='dark-lg'
+				padding='5'
+				borderRadius='10px'
+				my='5'
+			>
+				{/* <TableCaption
 				bg='gray.900'
 				boxShadow='dark-lg'
 				padding='5'
@@ -151,34 +241,29 @@ export default function StatementGenerator(props: Account) {
 			>
 				These are the last {transactions.length} transactions
 			</TableCaption> */}
-			<Thead>
-				<Tr>
-					<Th width='20%' color='twitter.50'>
-						Transaction ID
-					</Th>
-					<Th backgroundColor='red' width='10%' color='twitter.50'>
-						Transaction Type
-					</Th>
-					<Th width='10%' color='twitter.50'>
-						Date
-					</Th>
-					<Th width='10%' color='twitter.50'>
-						Amount
-					</Th>
-					{/* <Th color='twitter.50'>Tranferred To/ From</Th> */}
-				</Tr>
-			</Thead>
-			<Tbody>{RenderTransactions()}</Tbody>
-			<Tfoot borderRadius='10px'>
-				<Tr>
-					<Th color='twitter.50'>Transaction ID</Th>
-					<Th color='twitter.50'>Transaction Type</Th>
-					<Th color='twitter.50'>Date</Th>
-					<Th color='twitter.50'>Amount</Th>
-					{/* <Th color='twitter.50'>Tranferred To/ From</Th> */}
-				</Tr>
-			</Tfoot>
-		</Table>
+				<Thead>
+					<Tr>
+						<Th color='twitter.50'>Transaction ID</Th>
+						<Th color='twitter.50'>Transaction Type</Th>
+						<Th color='twitter.50'>Date</Th>
+						<Th color='twitter.50'>Amount</Th>
+						{/* <Th color='twitter.50'>Tranferred To/ From</Th> */}
+					</Tr>
+				</Thead>
+				<Tbody>{RenderTransactions()}</Tbody>
+				<Tfoot borderRadius='10px'>
+					<Tr>
+						<Th color='twitter.50'>Transaction ID</Th>
+						<Th color='twitter.50'>Transaction Type</Th>
+						<Th color='twitter.50'>Date</Th>
+						<Th color='twitter.50'>Amount</Th>
+						{/* <Th color='twitter.50'>Tranferred To/ From</Th> */}
+					</Tr>
+				</Tfoot>
+			</Table>
+		) : (
+			<MobileView />
+		)
 	) : (
 		<Center>
 			<Loading type='balls' color='twitter.50' height='7vh' width='7vw' />
