@@ -7,7 +7,7 @@ import {
 	FormHelperText,
 	FormLabel,
 	Heading,
-	Input,
+	useToast,
 	NumberInput,
 	NumberInputField,
 	Select,
@@ -22,6 +22,10 @@ import { useAccounts } from '../context/AccountContext';
 import axiosConfig from '../config/axiosConfig';
 import { encryptValue } from '../utils/security';
 import { useCustomer } from '../context/CustomerContext';
+import {
+	accountSelectedValidation,
+	amountValidation,
+} from '../utils/validation';
 
 export default function Deposit() {
 	const [accountSelectedIndex, setAccountSelectedIndex] = useState<number>(-1);
@@ -36,11 +40,29 @@ export default function Deposit() {
 	const { accounts } = useAccounts();
 	const { customer } = useCustomer();
 
+	const toast = useToast();
+	const toastIdRef = useRef<string | undefined | number>();
+
 	useEffect(() => {
 		if (!isLoggedIn) router.push('/login');
 	}, [isLoggedIn]);
 
 	if (!isLoggedIn) return <Loading />;
+
+	function addToToast(
+		title: string,
+		description?: string,
+		status?: string
+	): void {
+		toastIdRef.current = toast({
+			title,
+			description,
+			duration: 5000,
+			isClosable: true,
+			position: 'top',
+			status: status === 'success' ? 'success' : 'error',
+		});
+	}
 
 	function alertCloseHandler() {
 		setIsOpen(false);
@@ -70,11 +92,24 @@ export default function Deposit() {
 				},
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
+
+			addToToast('Amount Withdrew', '', 'success');
 		} catch (e) {
 			console.log(e);
+			addToToast('Internal Server Error', 'Please try again later');
 		} finally {
 			setLoading(false);
 			router.push('/dashboard');
+		}
+	}
+
+	function withdrawButtonHandler() {
+		try {
+			accountSelectedValidation(accountSelectedIndex);
+			amountValidation(amount);
+			setIsOpen(true);
+		} catch (e) {
+			addToToast(e.message);
 		}
 	}
 
@@ -129,7 +164,7 @@ export default function Deposit() {
 						loadingText='Processing Transaction'
 						colorScheme='blue'
 						mx='2'
-						onClick={() => setIsOpen(true)}
+						onClick={withdrawButtonHandler}
 					>
 						Withdraw
 					</Button>
