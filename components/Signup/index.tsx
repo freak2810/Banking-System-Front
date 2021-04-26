@@ -103,12 +103,7 @@ export default function SignUp() {
 			customerSignUpValidation(customer);
 
 			try {
-				// const result = await axiosConfig.post('customers/signup', customer);
-				const result = await axios.post(
-					'http://localhost:8000/api/customers/signup',
-					customer
-				);
-				// console.log(result);
+				const result = await axiosConfig.post('customers/signup', customer);
 				addToToast('Signup Successful', 'Welcome to the family!!', 'success');
 				router.push('/login');
 			} catch (e) {
