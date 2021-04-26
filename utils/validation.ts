@@ -31,3 +31,10 @@ export const accountNumberValidation = (
 
 	if (!isVerified) throw new Error('Please Verify the Account Number');
 };
+
+export const phoneNumberSignUpValidation = (phoneNumber: string) => {
+	if (phoneNumber.length <= 0) throw new Error('Phone Number is Required');
+
+	if (!/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(phoneNumber))
+		throw new Error('Phone Number should be of 10 digits only');
+};

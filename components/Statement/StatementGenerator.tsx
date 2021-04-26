@@ -54,6 +54,8 @@ export default function StatementGenerator(props: Account) {
 
 			// console.log(publicKey, privateKey);
 
+			console.log(response.data);
+
 			let result: Transaction[] = response.data.map(
 				async ({
 					transactionId,

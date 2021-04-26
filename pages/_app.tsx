@@ -1,5 +1,4 @@
-import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react';
-import theme from '../config/chakraconfig';
+import { ChakraProvider } from '@chakra-ui/react';
 import AccountContextProvider from '../context/AccountContext';
 import CustomerContextProvider from '../context/CustomerContext';
 import LoginContextProvider from '../context/LoginContext';

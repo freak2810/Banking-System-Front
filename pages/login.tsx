@@ -13,6 +13,7 @@ import {
 	FormLabel,
 	useToast,
 	InputLeftAddon,
+	Container,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
@@ -153,18 +154,29 @@ export default function Login() {
 						</InputGroup>
 					</FormControl>
 				</Box>
-				<Button
-					isLoading={loading}
-					loadingText='Logging In'
-					marginTop='5'
-					isFullWidth
-					colorScheme='blue'
-					variant='solid'
-					size='md'
-					onClick={loginHandler}
-				>
-					Log In
-				</Button>
+				<Flex justify='space-evenly'>
+					<Button
+						isLoading={loading}
+						loadingText='Logging In'
+						marginTop='5'
+						mx='5'
+						colorScheme='blue'
+						variant='solid'
+						size='md'
+						onClick={loginHandler}
+					>
+						Log In
+					</Button>
+					<Button
+						marginTop='5'
+						colorScheme='teal'
+						variant='solid'
+						size='md'
+						onClick={() => router.push('/signup')}
+					>
+						Sign Up
+					</Button>
+				</Flex>
 			</Flex>
 		</Flex>
 	);
