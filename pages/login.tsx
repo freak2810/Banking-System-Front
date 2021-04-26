@@ -123,7 +123,7 @@ export default function Login() {
 								borderColor='twitter.50'
 								color='twitter.50'
 								placeholder='Mobile Number'
-								type='number'
+								type='tel'
 								name='phoneNumber'
 								value={phoneNumber}
 								onChange={e => setPhoneNumber(e.target.value)}

@@ -7,10 +7,19 @@ import SignupForm from './SignupForm';
 import { phoneNumberSignUpValidation } from '../../utils/validation';
 
 export default function SignUp() {
-	const [phoneNumber, setPhoneNumber] = useState<string>('');
 	const [isOpen, setIsOpen] = useState<boolean>(true);
 	const [isVerified, setIsVerified] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
+
+	const [phoneNumber, setPhoneNumber] = useState<string>('');
+	const [customer, setCustomer] = useState({
+		firstName: 'asas',
+		lastName: '',
+		phoneNumber: '',
+		email: '',
+		password: '',
+		age: 18,
+	});
 
 	const cancelRef = useRef<MutableRefObject<RefObject<any>>>();
 
@@ -18,6 +27,18 @@ export default function SignUp() {
 
 	const toast = useToast();
 	const toastIdRef = useRef<string | undefined | number>();
+
+	function valueChangedHandler(target: string, value: string) {
+		const updatedCustomer = { ...customer };
+
+		if (target === 'firstName') updatedCustomer.firstName = value;
+		else if (target === 'lastName') updatedCustomer.lastName = value;
+		else if (target === 'password') updatedCustomer.password = value;
+		else if (target === 'age') updatedCustomer.age = +value;
+		else if (target === 'email') updatedCustomer.email = value;
+
+		setCustomer(updatedCustomer);
+	}
 
 	function addToToast(
 		title: string,
@@ -62,6 +83,9 @@ export default function SignUp() {
 				addToToast('Phone Number Verified', '', 'success');
 				setIsVerified(true);
 				setIsOpen(false);
+				setCustomer(prevState => {
+					return { ...prevState, phoneNumber };
+				});
 			}
 		} catch (e) {
 			addToToast(e.message);
@@ -71,7 +95,7 @@ export default function SignUp() {
 	}
 
 	return (
-		<Flex bg='twitter.50' minHeight='100vh' justify='center'>
+		<Flex bg='twitter.50' minHeight='100vh' justify='center' padding='5%'>
 			<PhoneAlert
 				loading={loading}
 				cancelRef={cancelRef}
@@ -81,7 +105,12 @@ export default function SignUp() {
 				onChangeHandler={onAadhaarChangedHandler}
 				verify={verifyCustomer}
 			/>
-			{isVerified === true ? <SignupForm phoneNumber={phoneNumber} /> : null}
+			{isVerified === true ? (
+				<SignupForm
+					valueChangedHandler={valueChangedHandler}
+					customer={customer}
+				/>
+			) : null}
 		</Flex>
 	);
 }
