@@ -1,4 +1,6 @@
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react';
+import React from 'react';
+import Navbar from '../components/Navbar';
 import theme from '../config/chakraconfig';
 import AccountContextProvider from '../context/AccountContext';
 import CustomerContextProvider from '../context/CustomerContext';
@@ -11,6 +13,7 @@ function MyApp({ Component, pageProps }) {
 			<CustomerContextProvider>
 				<LoginContextProvider>
 					<AccountContextProvider>
+						<Navbar />
 						<Component {...pageProps} />
 					</AccountContextProvider>
 				</LoginContextProvider>
