@@ -12,14 +12,16 @@ import {
 	IconButton,
 	InputRightElement,
 	Box,
-	Center,
+	ButtonGroup,
+	Button,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 interface Customer {
 	firstName: string;
 	lastName: string;
-	phoneNumber: string;
+	phone: string;
 	email: string;
 	password: string;
 	age: number;
@@ -27,14 +29,17 @@ interface Customer {
 
 interface SignUpProps {
 	customer: Customer;
-	valueChangedHandler: (target, value) => void;
+	valueChangedHandler: (target: string, value: string | number) => void;
+	onSaveButtonHandler: () => void;
 }
 
 export default function SignupForm({
 	customer,
 	valueChangedHandler,
+	onSaveButtonHandler,
 }: SignUpProps) {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const router = useRouter();
 
 	return (
 		<Container
@@ -43,7 +48,6 @@ export default function SignupForm({
 			boxShadow='dark-lg'
 			padding='6'
 			borderRadius='10px'
-			margin='5%'
 			centerContent
 			color='twitter.50'
 			height='fit-content'
@@ -70,10 +74,10 @@ export default function SignupForm({
 				</FormControl>
 			</Flex>
 			<Flex wrap='wrap' justify='space-around' width='100%' my='2'>
-				<FormControl maxW='450px' id='phoneNumber' isRequired>
+				<FormControl maxW='450px' id='phone' isRequired>
 					<FormLabel>Phone Number</FormLabel>
 					<Input
-						value={customer.phoneNumber}
+						value={customer.phone}
 						isDisabled
 						placeholder='Phone Number'
 						type='tel'
@@ -131,6 +135,14 @@ export default function SignupForm({
 						/>
 					</FormControl>
 				</Flex>
+				<ButtonGroup marginTop='10' spacing='5' size='md' variant='solid'>
+					<Button colorScheme='blue' onClick={onSaveButtonHandler}>
+						Save
+					</Button>
+					<Button onClick={() => router.push('/')} colorScheme='red'>
+						Go Back
+					</Button>
+				</ButtonGroup>
 			</Flex>
 		</Container>
 	);

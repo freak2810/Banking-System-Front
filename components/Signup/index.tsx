@@ -4,7 +4,11 @@ import axiosConfig from '../../config/axiosConfig';
 import PhoneAlert from './PhoneDialogue';
 import { useRouter } from 'next/router';
 import SignupForm from './SignupForm';
-import { phoneNumberSignUpValidation } from '../../utils/validation';
+import {
+	customerSignUpValidation,
+	phoneNumberSignUpValidation,
+} from '../../utils/validation';
+import axios from 'axios';
 
 export default function SignUp() {
 	const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -13,9 +17,9 @@ export default function SignUp() {
 
 	const [phoneNumber, setPhoneNumber] = useState<string>('');
 	const [customer, setCustomer] = useState({
-		firstName: 'asas',
+		firstName: '',
 		lastName: '',
-		phoneNumber: '',
+		phone: '',
 		email: '',
 		password: '',
 		age: 18,
@@ -84,13 +88,34 @@ export default function SignUp() {
 				setIsVerified(true);
 				setIsOpen(false);
 				setCustomer(prevState => {
-					return { ...prevState, phoneNumber };
+					return { ...prevState, phone: phoneNumber };
 				});
 			}
 		} catch (e) {
 			addToToast(e.message);
 		} finally {
 			setLoading(false);
+		}
+	}
+
+	async function createCustomer() {
+		try {
+			customerSignUpValidation(customer);
+
+			try {
+				// const result = await axiosConfig.post('customers/signup', customer);
+				const result = await axios.post(
+					'http://localhost:8000/api/customers/signup',
+					customer
+				);
+				// console.log(result);
+				addToToast('Signup Successful', 'Welcome to the family!!', 'success');
+				router.push('/login');
+			} catch (e) {
+				addToToast('Internal Server Error');
+			}
+		} catch (e) {
+			addToToast(e.message);
 		}
 	}
 
@@ -107,6 +132,7 @@ export default function SignUp() {
 			/>
 			{isVerified === true ? (
 				<SignupForm
+					onSaveButtonHandler={createCustomer}
 					valueChangedHandler={valueChangedHandler}
 					customer={customer}
 				/>
