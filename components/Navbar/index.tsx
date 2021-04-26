@@ -25,9 +25,9 @@ export default function Navbar() {
 				height: '60px',
 			}}
 		>
-			<ButtonGroup spacing='87vw'>
+			<ButtonGroup spacing='89vw'>
 				<Button
-					colorScheme='red'
+					colorScheme='messenger'
 					variant='ghost'
 					mt='2.5'
 					size='md'
@@ -37,7 +37,7 @@ export default function Navbar() {
 				</Button>
 
 				<Button
-					colorScheme='red'
+					colorScheme='messenger'
 					variant='ghost'
 					mt='2.5'
 					size='md'
