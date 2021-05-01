@@ -8,7 +8,6 @@ import {
 	customerSignUpValidation,
 	phoneNumberSignUpValidation,
 } from '../../utils/validation';
-import axios from 'axios';
 
 export default function SignUp() {
 	const [isOpen, setIsOpen] = useState<boolean>(true);
