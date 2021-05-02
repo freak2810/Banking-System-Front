@@ -99,17 +99,21 @@ export default function SignUp() {
 
 	async function createCustomer() {
 		try {
+			setLoading(true);
 			customerSignUpValidation(customer);
 
 			try {
-				const result = await axiosConfig.post('customers/signup', customer);
+				await axiosConfig.post('customers/signup', customer);
 				addToToast('Signup Successful', 'Welcome to the family!!', 'success');
 				router.push('/login');
 			} catch (e) {
 				addToToast('Internal Server Error');
+				setLoading(false);
 			}
 		} catch (e) {
 			addToToast(e.message);
+		} finally {
+			setLoading(false);
 		}
 	}
 
@@ -126,6 +130,7 @@ export default function SignUp() {
 			/>
 			{isVerified === true ? (
 				<SignupForm
+					loading={loading}
 					onSaveButtonHandler={createCustomer}
 					valueChangedHandler={valueChangedHandler}
 					customer={customer}

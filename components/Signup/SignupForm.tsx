@@ -31,12 +31,14 @@ interface SignUpProps {
 	customer: Customer;
 	valueChangedHandler: (target: string, value: string | number) => void;
 	onSaveButtonHandler: () => void;
+	loading: boolean;
 }
 
 export default function SignupForm({
 	customer,
 	valueChangedHandler,
 	onSaveButtonHandler,
+	loading,
 }: SignUpProps) {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const router = useRouter();
@@ -136,7 +138,12 @@ export default function SignupForm({
 					</FormControl>
 				</Flex>
 				<ButtonGroup marginTop='10' spacing='5' size='md' variant='solid'>
-					<Button colorScheme='blue' onClick={onSaveButtonHandler}>
+					<Button
+						isLoading={loading}
+						loadingText='Creating an account'
+						colorScheme='blue'
+						onClick={onSaveButtonHandler}
+					>
 						Save
 					</Button>
 					<Button onClick={() => router.push('/')} colorScheme='red'>

@@ -1,12 +1,15 @@
-import { Container, Flex, Heading, Select, Box } from '@chakra-ui/react';
+import { Container, Heading, Select } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useAccounts } from '../../context/AccountContext';
+import { useCustomer } from '../../context/CustomerContext';
 import StatementGenerator from './StatementGenerator';
 
 export default function StatementGeneration() {
 	const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
 	const { accounts } = useAccounts();
+	const { customer } = useCustomer();
+
 	return (
 		<div>
 			<Container
@@ -28,7 +31,7 @@ export default function StatementGeneration() {
 				>
 					{accounts.map((account, index) => (
 						<option color='teal' key={index} value={index}>
-							{account.accountNumber}
+							{`${account.accountNumber} (${customer.firstName} ${customer.lastName})`}
 						</option>
 					))}
 				</Select>

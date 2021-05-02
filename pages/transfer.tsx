@@ -133,6 +133,7 @@ export default function Transaction() {
 			const res = await axiosConfig.get(`/accounts/${receiverAccountNumber}`, {
 				headers: { Authorization: `Token ${customer?.token}` },
 			});
+
 			setReceiverAccount(res.data);
 			setVerifyButtonColor('green');
 			setVerifyButtonTitle('Verified');
@@ -216,8 +217,17 @@ export default function Transaction() {
 							icon={<RenderIcon />}
 						/>
 					</Flex>
-					<FormHelperText color='whiteAlpha.900'>
-						There are 16 digits in the account number
+					<FormHelperText
+						color='whiteAlpha.900'
+						textDecoration={
+							verifyButtonColor === 'green' ? 'underline' : 'none'
+						}
+					>
+						{verifyButtonColor === 'green'
+							? `This Account belongs to ${
+									(receiverAccount as any).customer.firstName
+							  } ${(receiverAccount as any).customer.lastName}`
+							: 'There are 16 digits in the account number'}
 					</FormHelperText>
 				</FormControl>
 				<FormControl id='amount' isRequired my='5'>

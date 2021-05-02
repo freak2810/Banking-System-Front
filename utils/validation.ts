@@ -70,7 +70,7 @@ export const customerSignUpValidation = (customer: Customer) => {
 	if (customer.age < 18 || customer.age > 65)
 		throw new Error('Your age should be above 18 and under 65');
 
-	if (customer.email.length <= 0) throw new Error('Email cannot be empty');
+	// if (customer.email.length <= 0) throw new Error('Email cannot be empty');
 
 	if (
 		!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(

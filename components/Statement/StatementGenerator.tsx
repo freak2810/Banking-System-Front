@@ -54,7 +54,7 @@ export default function StatementGenerator(props: Account) {
 
 			// console.log(publicKey, privateKey);
 
-			console.log(response.data);
+			// console.log(response.data);
 
 			let result: Transaction[] = response.data.map(
 				async ({
@@ -224,6 +224,21 @@ export default function StatementGenerator(props: Account) {
 		);
 	};
 
+	if (transactions.length === 0)
+		return (
+			<Container
+				my='5'
+				textAlign='center'
+				bg='gray.900'
+				boxShadow='dark-lg'
+				padding='5'
+				color='twitter.50'
+				borderRadius='10px'
+			>
+				<Text>No Transactions to show 😿</Text>
+			</Container>
+		);
+
 	return transactions.length > 0 ? (
 		isLargerThan768 ? (
 			<Table
@@ -271,5 +286,3 @@ export default function StatementGenerator(props: Account) {
 		</Center>
 	);
 }
-
-//TODO: When the decryption of balance is done ... also update the details in the account context
