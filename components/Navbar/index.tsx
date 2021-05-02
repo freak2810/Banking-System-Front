@@ -1,51 +1,51 @@
-import { Button, ButtonGroup, Container, flexbox } from '@chakra-ui/react';
-
+import { Button, Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 import { useLogin } from '../../context/LoginContext';
 
 export default function Navbar() {
 	const router = useRouter();
-	const { isLoggedIn, logIn, logOut } = useLogin();
+	const { isLoggedIn, logOut } = useLogin();
 
 	function logout() {
 		logOut();
-		router.push('/');
+		router.push('/login');
 	}
 
-	return (
+	return router.pathname !== '/login' && router.pathname !== '/' ? (
 		<nav
 			style={{
 				backgroundColor: '#171923',
-				//backgroundColor: 'red',
+				justifyContent: 'center',
 				position: 'absolute',
 				top: 0,
 				display: 'flex',
-				width: '100vw',
-				height: '60px',
+				width: '100%',
+				height: '7vh',
 			}}
 		>
-			<ButtonGroup spacing='89vw'>
-				<Button
-					colorScheme='messenger'
-					variant='ghost'
-					mt='2.5'
-					size='md'
-					onClick={() => router.push('/dashboard')}
-				>
-					{isLoggedIn ? 'Go Back' : 'Home'}
-				</Button>
-
-				<Button
-					colorScheme='messenger'
-					variant='ghost'
-					mt='2.5'
-					size='md'
-					onClick={logout}
-				>
-					{isLoggedIn ? 'Log Out' : 'Log In'}
-				</Button>
-			</ButtonGroup>
+			<Flex
+				width='90%'
+				flexDirection='row-reverse'
+				alignItems='center'
+				justifyContent='space-between'
+			>
+				{isLoggedIn ? (
+					<Button colorScheme='red' onClick={logout}>
+						Log Out
+					</Button>
+				) : null}
+				{router.pathname !== '/dashboard' &&
+				router.pathname !== '/login' &&
+				router.pathname !== '/' ? (
+					<Button
+						colorScheme='messenger'
+						onClick={() => router.push('/dashboard')}
+					>
+						Go Back
+					</Button>
+				) : null}
+			</Flex>
 		</nav>
-	);
+	) : null;
 }

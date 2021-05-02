@@ -13,10 +13,8 @@ import {
 	FormLabel,
 	useToast,
 	InputLeftAddon,
-	Divider,
-	Stack,
 } from '@chakra-ui/react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
 import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
