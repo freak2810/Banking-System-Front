@@ -13,7 +13,8 @@ import {
 	FormLabel,
 	useToast,
 	InputLeftAddon,
-	Container,
+	Divider,
+	Stack,
 } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import axiosConfig from '../config/axiosConfig';
@@ -92,74 +93,74 @@ export default function Login() {
 	};
 
 	return (
-		<Flex
-			height='100vh'
-			bg='twitter.50'
-			justifyContent='center'
-			alignItems='center'
-		>
+		<>
 			<Flex
+				height='100vh'
+				bg='twitter.50'
+				justifyContent='center'
 				alignItems='center'
-				bg='gray.900'
-				direction='column'
-				justifyContent='space-evenly'
-				boxShadow='dark-lg'
-				padding='5'
-				borderRadius='10px'
 			>
-				<Heading color='twitter.50' mb={5}>
-					Login
-				</Heading>
-				<Box>
-					<FormControl id='custId'>
-						<FormLabel color='whiteAlpha.900'>Mobile Number</FormLabel>
-						<InputGroup my={2}>
-							<InputLeftAddon
-								bgColor='twitter.50'
-								color='gray.900'
-								children='+91'
-							/>
-							<Input
-								borderColor='twitter.50'
-								color='twitter.50'
-								placeholder='Mobile Number'
-								type='tel'
-								name='phoneNumber'
-								value={phoneNumber}
-								onChange={e => setPhoneNumber(e.target.value)}
-							/>
-						</InputGroup>
-					</FormControl>
-
-					<FormControl>
-						<FormLabel color='whiteAlpha.900'>Password</FormLabel>
-						<InputGroup marginY={2}>
-							<Input
-								color='twitter.50'
-								borderColor='twitter.50'
-								placeholder='Password'
-								name='password'
-								type={showPassword ? 'text' : 'password'}
-								value={password}
-								onChange={e => setPassword(e.target.value)}
-							/>
-							<InputRightElement width='fit-content'>
-								<IconButton
-									aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
-									colorScheme='twitter.50'
-									onClick={() => setShowPassword(prevState => !prevState)}
-									icon={renderShowPasswordIcon(showPassword)}
+				<Flex
+					alignItems='center'
+					bg='gray.900'
+					direction='column'
+					justifyContent='space-evenly'
+					boxShadow='dark-lg'
+					padding='5'
+					borderRadius='10px'
+				>
+					<Heading color='twitter.50' mb={5}>
+						Login
+					</Heading>
+					<Box>
+						<FormControl id='custId'>
+							<FormLabel color='whiteAlpha.900'>Mobile Number</FormLabel>
+							<InputGroup my={2}>
+								<InputLeftAddon
+									bgColor='twitter.50'
+									color='gray.900'
+									children='+91'
 								/>
-							</InputRightElement>
-						</InputGroup>
-					</FormControl>
-				</Box>
-				<Flex justify='space-evenly'>
+								<Input
+									borderColor='twitter.50'
+									color='twitter.50'
+									placeholder='Mobile Number'
+									type='number'
+									name='phoneNumber'
+									value={phoneNumber}
+									onChange={e => setPhoneNumber(e.target.value)}
+								/>
+							</InputGroup>
+						</FormControl>
+
+						<FormControl>
+							<FormLabel color='whiteAlpha.900'>Password</FormLabel>
+							<InputGroup marginY={2}>
+								<Input
+									color='twitter.50'
+									borderColor='twitter.50'
+									placeholder='Password'
+									name='password'
+									type={showPassword ? 'text' : 'password'}
+									value={password}
+									onChange={e => setPassword(e.target.value)}
+								/>
+								<InputRightElement width='fit-content'>
+									<IconButton
+										aria-label={showPassword ? 'Hide' : 'Show' + 'password'}
+										colorScheme='twitter.50'
+										onClick={() => setShowPassword(prevState => !prevState)}
+										icon={renderShowPasswordIcon(showPassword)}
+									/>
+								</InputRightElement>
+							</InputGroup>
+						</FormControl>
+					</Box>
 					<Button
 						isLoading={loading}
 						loadingText='Logging In'
 						marginTop='5'
-						mx='5'
+						isFullWidth
 						colorScheme='blue'
 						variant='solid'
 						size='md'
@@ -167,17 +168,8 @@ export default function Login() {
 					>
 						Log In
 					</Button>
-					<Button
-						marginTop='5'
-						colorScheme='teal'
-						variant='solid'
-						size='md'
-						onClick={() => router.push('/signup')}
-					>
-						Sign Up
-					</Button>
 				</Flex>
 			</Flex>
-		</Flex>
+		</>
 	);
 }

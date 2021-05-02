@@ -1,4 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import Navbar from '../components/Navbar';
 import AccountContextProvider from '../context/AccountContext';
 import CustomerContextProvider from '../context/CustomerContext';
 import LoginContextProvider from '../context/LoginContext';
@@ -10,6 +11,7 @@ function MyApp({ Component, pageProps }) {
 			<CustomerContextProvider>
 				<LoginContextProvider>
 					<AccountContextProvider>
+						<Navbar />
 						<Component {...pageProps} />
 					</AccountContextProvider>
 				</LoginContextProvider>
