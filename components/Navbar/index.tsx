@@ -12,7 +12,9 @@ export default function Navbar() {
 		router.push('/login');
 	}
 
-	return router.pathname !== '/login' && router.pathname !== '/' ? (
+	return router.pathname !== '/login' &&
+		router.pathname !== '/' &&
+		router.pathname !== '/signup' ? (
 		<nav
 			style={{
 				backgroundColor: '#171923',

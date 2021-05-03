@@ -154,18 +154,31 @@ export default function Login() {
 							</InputGroup>
 						</FormControl>
 					</Box>
-					<Button
-						isLoading={loading}
-						loadingText='Logging In'
-						marginTop='5'
-						isFullWidth
-						colorScheme='blue'
-						variant='solid'
-						size='md'
-						onClick={loginHandler}
-					>
-						Log In
-					</Button>
+					<Flex justifyContent='center' width='100%'>
+						<Button
+							isLoading={loading}
+							loadingText='Logging In'
+							marginTop='5'
+							isFullWidth
+							colorScheme='blue'
+							variant='solid'
+							size='md'
+							onClick={loginHandler}
+							marginRight='5'
+						>
+							Log In
+						</Button>
+						<Button
+							marginTop='5'
+							isFullWidth
+							colorScheme='teal'
+							variant='solid'
+							size='md'
+							onClick={() => router.push('/signup')}
+						>
+							Sign Up
+						</Button>
+					</Flex>
 				</Flex>
 			</Flex>
 		</>
