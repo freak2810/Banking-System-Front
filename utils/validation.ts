@@ -79,3 +79,10 @@ export const customerSignUpValidation = (customer: Customer) => {
 	)
 		throw new Error('Email is invalid');
 };
+
+export const passwordValidation = (password: string) => {
+	if (password.length <= 0) throw new Error('Password is Required');
+
+	if (!/^(?=.{8,})/.test(password))
+		throw new Error('Password should atleast be of 8 digits');
+};

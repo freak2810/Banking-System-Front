@@ -17,7 +17,7 @@ interface Alert {
 	onContinue: () => void;
 }
 
-export default function ALertDialogue(props: Alert) {
+export default function AlertDialogue(props: Alert) {
 	return (
 		<AlertDialog
 			isOpen={props.isOpen}
