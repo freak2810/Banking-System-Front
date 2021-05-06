@@ -140,7 +140,7 @@ export default function SignupForm({
 				<ButtonGroup marginTop='10' spacing='5' size='md' variant='solid'>
 					<Button
 						isLoading={loading}
-						loadingText='Creating an account'
+						loadingText='Creating account'
 						colorScheme='blue'
 						onClick={onSaveButtonHandler}
 					>

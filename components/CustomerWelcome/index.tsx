@@ -31,6 +31,7 @@ export default function CustomerWelcomeScreen() {
 	const { customer } = useCustomer();
 
 	const [isOpen, setIsOpen] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [password, setPassword] = useState<string>('');
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -65,6 +66,7 @@ export default function CustomerWelcomeScreen() {
 
 	async function onCreateConfirmHandler() {
 		try {
+			setIsLoading(true);
 			passwordValidation(password);
 
 			try {
@@ -87,11 +89,13 @@ export default function CustomerWelcomeScreen() {
 			} catch (e) {
 				addToToast('Invalid Credentials');
 			} finally {
+				setIsLoading(false);
 				router.push('/login');
 				setIsOpen(false);
 			}
 		} catch (e) {
 			addToToast(e.message);
+			setIsLoading(false);
 		}
 	}
 
@@ -137,7 +141,12 @@ export default function CustomerWelcomeScreen() {
 							</FormControl>
 						</AlertDialogBody>
 						<AlertDialogFooter>
-							<Button colorScheme='linkedin' onClick={onCreateConfirmHandler}>
+							<Button
+								isLoading={isLoading}
+								loadingText='Opening Account'
+								colorScheme='linkedin'
+								onClick={onCreateConfirmHandler}
+							>
 								Confirm
 							</Button>
 							<Button
@@ -167,7 +176,11 @@ export default function CustomerWelcomeScreen() {
 			<Heading color='twitter.50' mb={5}>
 				Hey! {firstName}🐣
 			</Heading>
-			<Flex alignItems='center' justifyContent='space-between'>
+			<Flex
+				wrap='wrap-reverse'
+				alignItems='center'
+				justifyContent='space-between'
+			>
 				<Box marginLeft='1'>
 					<Text color='twitter.50'>Customer ID</Text>
 					<Text color='twitter.50' fontWeight='bold'>
@@ -186,11 +199,7 @@ export default function CustomerWelcomeScreen() {
 						{phone}
 					</Text>
 				</Box>
-				<Button
-					colorScheme='linkedin'
-					marginLeft='5px'
-					onClick={() => setIsOpen(true)}
-				>
+				<Button colorScheme='linkedin' my='3' onClick={() => setIsOpen(true)}>
 					Open a new Account
 				</Button>
 			</Flex>
