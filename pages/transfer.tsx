@@ -117,7 +117,7 @@ export default function Transaction() {
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
 
-			addToToast('Transaction Successful', '', 'success');
+			addToToast('Transaction Successful', `Amount: ${amount}`, 'success');
 		} catch (e) {
 			console.log(e);
 			addToToast('Internal Server Error', 'Please try again later');
