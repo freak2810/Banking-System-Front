@@ -19,6 +19,7 @@ import axiosConfig from '../config/axiosConfig';
 import { useCustomer } from '../context/CustomerContext';
 import { useLogin } from '../context/LoginContext';
 import { loginValidation } from '../utils/validation';
+import SEO from '../components/SEO';
 
 export default function Login() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -92,6 +93,7 @@ export default function Login() {
 
 	return (
 		<>
+			<SEO title='Generic Group Bank' />
 			<Flex
 				height='100vh'
 				bg='twitter.50'

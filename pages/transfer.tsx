@@ -31,6 +31,7 @@ import {
 	accountSelectedValidation,
 	amountValidation,
 } from '../utils/validation';
+import SEO from '../components/SEO';
 
 export default function Transaction() {
 	const [accountSelectedIndex, setAccountSelectedIndex] = useState<number>(-1);
@@ -167,109 +168,112 @@ export default function Transaction() {
 	}
 
 	return (
-		<Flex
-			bg='twitter.50'
-			alignItems='center'
-			justifyContent='center'
-			height='100vh'
-		>
-			<Container
-				bg='gray.900'
-				boxShadow='dark-lg'
-				padding='5'
-				borderRadius='10px'
-				margin='5%'
+		<>
+			<SEO title='Transfer' />
+			<Flex
+				bg='twitter.50'
+				alignItems='center'
+				justifyContent='center'
+				height='100vh'
 			>
-				<Heading color='twitter.50' textAlign='center'>
-					Transfer
-				</Heading>
-				<FormControl id='senderaccountNumber' isRequired my='5'>
-					<FormLabel color='whiteAlpha.900'>Select your account</FormLabel>
-					<Select
-						placeholder='Select Account'
-						bg='twitter.50'
-						onChange={e => {
-							setAccountSelectedIndex(+e.target.value);
-						}}
-					>
-						{accounts.map((account, index) => (
-							<option key={index} value={index}>
-								{account.accountNumber}
-							</option>
-						))}
-					</Select>
-				</FormControl>
-				<FormControl id='recieveraccountNumber' isRequired my='5'>
-					<FormLabel color='whiteAlpha.900'>To Account Number</FormLabel>
-					<Flex>
-						<Input
-							color='whiteAlpha.900'
-							placeholder='Account Number'
-							value={receiverAccountNumber}
-							onChange={e => accountNumberChangedHandler(e.target.value)}
-						/>
-						<IconButton
-							marginLeft='1'
-							isLoading={loadingIcon}
-							onClick={verifyButtonHandler}
-							colorScheme={verifyButtonColor}
-							aria-label={verifyButtonTitle}
-							icon={<RenderIcon />}
-						/>
-					</Flex>
-					<FormHelperText
-						color='whiteAlpha.900'
-						textDecoration={
-							verifyButtonColor === 'green' ? 'underline' : 'none'
-						}
-					>
-						{verifyButtonColor === 'green'
-							? `This Account belongs to ${
-									(receiverAccount as any).customer.firstName
-							  } ${(receiverAccount as any).customer.lastName}`
-							: 'There are 16 digits in the account number'}
-					</FormHelperText>
-				</FormControl>
-				<FormControl id='amount' isRequired my='5'>
-					<FormLabel color='twitter.50'>Amount</FormLabel>
-					<NumberInput min={0} keepWithinRange={true}>
-						<NumberInputField
-							color='twitter.50'
-							placeholder='Amount to Transfer'
-							value={amount}
-							onChange={e => setAmount(+e.target.value)}
-						/>
-					</NumberInput>
-					<FormHelperText color='twitter.50'>Amount in INR</FormHelperText>
-				</FormControl>
-
-				<ButtonGroup width='100%' justifyContent='center'>
-					<Button
-						isLoading={loading}
-						loadingText='Processing Transaction'
-						colorScheme='blue'
-						mx='2'
-						onClick={transferButtonHandler}
-					>
+				<Container
+					bg='gray.900'
+					boxShadow='dark-lg'
+					padding='5'
+					borderRadius='10px'
+					margin='5%'
+				>
+					<Heading color='twitter.50' textAlign='center'>
 						Transfer
-					</Button>
-					<Button
-						colorScheme='red'
-						mx='2'
-						onClick={() => router.push('/dashboard')}
-					>
-						Go Back
-					</Button>
-				</ButtonGroup>
-			</Container>
-			<AlertDialogue
-				heading='Are you sure about this?'
-				body={`You can't undo this action afterwards.`}
-				isOpen={isOpen}
-				onContinue={alertContinueHandler}
-				onClose={alertCloseHandler}
-				cancelRef={cancelRef}
-			/>
-		</Flex>
+					</Heading>
+					<FormControl id='senderaccountNumber' isRequired my='5'>
+						<FormLabel color='whiteAlpha.900'>Select your account</FormLabel>
+						<Select
+							placeholder='Select Account'
+							bg='twitter.50'
+							onChange={e => {
+								setAccountSelectedIndex(+e.target.value);
+							}}
+						>
+							{accounts.map((account, index) => (
+								<option key={index} value={index}>
+									{account.accountNumber}
+								</option>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl id='recieveraccountNumber' isRequired my='5'>
+						<FormLabel color='whiteAlpha.900'>To Account Number</FormLabel>
+						<Flex>
+							<Input
+								color='whiteAlpha.900'
+								placeholder='Account Number'
+								value={receiverAccountNumber}
+								onChange={e => accountNumberChangedHandler(e.target.value)}
+							/>
+							<IconButton
+								marginLeft='1'
+								isLoading={loadingIcon}
+								onClick={verifyButtonHandler}
+								colorScheme={verifyButtonColor}
+								aria-label={verifyButtonTitle}
+								icon={<RenderIcon />}
+							/>
+						</Flex>
+						<FormHelperText
+							color='whiteAlpha.900'
+							textDecoration={
+								verifyButtonColor === 'green' ? 'underline' : 'none'
+							}
+						>
+							{verifyButtonColor === 'green'
+								? `This Account belongs to ${
+										(receiverAccount as any).customer.firstName
+								  } ${(receiverAccount as any).customer.lastName}`
+								: 'There are 16 digits in the account number'}
+						</FormHelperText>
+					</FormControl>
+					<FormControl id='amount' isRequired my='5'>
+						<FormLabel color='twitter.50'>Amount</FormLabel>
+						<NumberInput min={0} keepWithinRange={true}>
+							<NumberInputField
+								color='twitter.50'
+								placeholder='Amount to Transfer'
+								value={amount}
+								onChange={e => setAmount(+e.target.value)}
+							/>
+						</NumberInput>
+						<FormHelperText color='twitter.50'>Amount in INR</FormHelperText>
+					</FormControl>
+
+					<ButtonGroup width='100%' justifyContent='center'>
+						<Button
+							isLoading={loading}
+							loadingText='Processing Transaction'
+							colorScheme='blue'
+							mx='2'
+							onClick={transferButtonHandler}
+						>
+							Transfer
+						</Button>
+						<Button
+							colorScheme='red'
+							mx='2'
+							onClick={() => router.push('/dashboard')}
+						>
+							Go Back
+						</Button>
+					</ButtonGroup>
+				</Container>
+				<AlertDialogue
+					heading='Are you sure about this?'
+					body={`You can't undo this action afterwards.`}
+					isOpen={isOpen}
+					onContinue={alertContinueHandler}
+					onClose={alertCloseHandler}
+					cancelRef={cancelRef}
+				/>
+			</Flex>
+		</>
 	);
 }
