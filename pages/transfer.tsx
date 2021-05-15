@@ -118,7 +118,7 @@ export default function Transaction() {
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
 
-			addToToast('Transaction Successful', `Amount: ${amount}`, 'success');
+			addToToast('Transaction Successful🤩', `Amount: ${amount}`, 'success');
 		} catch (e) {
 			console.log(e);
 			addToToast('Internal Server Error', 'Please try again later');
@@ -154,6 +154,13 @@ export default function Transaction() {
 				receiverAccountNumber,
 				receiverAccount ? true : false
 			);
+
+			if (
+				accounts[accountSelectedIndex as number].accountNumber ===
+				receiverAccount?.accountNumber
+			)
+				throw new Error(`you can't send money to youself🙆‍♂️`);
+
 			amountValidation(amount, accounts[accountSelectedIndex].balance);
 			setIsOpen(true);
 		} catch (e) {

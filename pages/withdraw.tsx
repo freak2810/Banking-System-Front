@@ -94,7 +94,7 @@ export default function Deposit() {
 				{ headers: { Authorization: `Token ${customer?.token}` } }
 			);
 
-			addToToast('Amount Withdrew', `Amount: ${amount}`, 'success');
+			addToToast('Amount Withdrew🤩', `Amount: ${amount}`, 'success');
 		} catch (e) {
 			console.log(e);
 			addToToast('Internal Server Error', 'Please try again later');
