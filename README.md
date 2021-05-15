@@ -2,6 +2,8 @@
 
 This is a project which demonstrates Homomorphic Encryption using Paillier Encryption.
 
+The API for this project can be found at [Banking System API](https://github.com/AdityaManikanth2810/Banking-System-API).
+
 ## Technologies Used
 
 1. [Yarn](https://yarnpkg.com/)
